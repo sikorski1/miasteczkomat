@@ -44,6 +44,18 @@ services:
       - "3000:3000"
     command: sh -c "npm run migrate && npm run start"
 
+  wyszukiwacz:
+    build:
+      context: ../wyszukiwacz
+    container_name: wyszukiwacz
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgres://admin:12345@db:5432/postgres
+    ports:
+      - "50052:50052"
+    command: python server.py
+
 volumes:
   pgdata:
   minio-data:

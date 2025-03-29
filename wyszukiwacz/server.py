@@ -18,20 +18,22 @@ class QueryService(query_pb2_grpc.QueryServicer):
         if not retrieved_ids:
             context.set_code(grpc.StatusCode.NOT_FOUND)
             context.set_details("No matching products found.")
-            return query_pb2.ProductsResponse(products=[])
+            return query_pb2.FullPayloadList(payloads=[])
 
         # Step 2: Fetch full product details from PostgreSQL
         retrieved_full_products = fetch_products_by_ids(db_conn, retrieved_ids)
         if not retrieved_full_products:
             context.set_code(grpc.StatusCode.NOT_FOUND)
             context.set_details("No product details found in the database.")
-            return query_pb2.ProductsResponse(products=[])
+            return query_pb2.FullPayloadList(payloads=[])
 
         # Step 3: Map the retrieved products to the gRPC response format
-        products = []
+        payloads = []
         for prod in retrieved_full_products:
             if not prod:
                 continue
+
+            # Create a Product object
             product = query_pb2.Product(
                 name=prod.get('name', ''),
                 photo=prod.get('photourl', ''),
@@ -42,16 +44,31 @@ class QueryService(query_pb2_grpc.QueryServicer):
                 action_type=prod.get('actiontype', ''),
                 person_id=str(prod.get('person_id', ''))
             )
-            products.append(product)
 
-        return query_pb2.ProductsResponse(products=products)
+            # Create a User object (mocked for now, replace with actual user data if available)
+            user = query_pb2.User(
+                dorm="Mock Dorm",
+                room_number="101",
+                name="John",
+                surname="Doe",
+                phone="123456789",
+                instagram="john_doe",
+                facebook="john.doe"
+            )
+
+            # Create a FullPayload object
+            full_payload = query_pb2.FullPayload(user=user, product=product)
+            payloads.append(full_payload)
+
+        # Return the FullPayloadList
+        return query_pb2.FullPayloadList(payloads=payloads)
 
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     query_pb2_grpc.add_QueryServicer_to_server(QueryService(), server)
-    server.add_insecure_port('[::]:50051')
+    server.add_insecure_port('[::]:50052')
     server.start()
-    print("Server started on port 50051")
+    print("Server started on port 50052")
     server.wait_for_termination()
 
 if __name__ == '__main__':

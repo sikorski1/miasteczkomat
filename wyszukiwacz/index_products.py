@@ -192,7 +192,7 @@ def index_products_batch(collection, model, products):
 if __name__ == "__main__":
     print("--- Starting Product Indexing Process ---")
 
-    CLEAR_EXISTING_COLLECTION = False # Set True to wipe Chroma collection first
+    CLEAR_EXISTING_COLLECTION = True # Set True to wipe Chroma collection first
 
     db_conn = connect_db()
     if not db_conn:
