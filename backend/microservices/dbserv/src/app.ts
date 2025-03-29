@@ -1,21 +1,58 @@
-import { db } from "./database/db";
-import express from "express";
-import dotenv from "dotenv";
-import cors from "cors";
+import * as grpc from '@grpc/grpc-js';
+import * as protoLoader from '@grpc/proto-loader';
+import { products } from './database/schema';
+import { db } from './database/db';
+import { DataServiceName,  DataClientImpl, SaveResponse, User, Product, FullPayload } from './proto/data';
+import { BinaryWriter, BinaryReader } from '@bufbuild/protobuf/wire';
 
-dotenv.config();
-const app = express();
+const packageDefinition = protoLoader.loadSync('./proto/data.proto', {});
 
-app.use(cors({
-    origin: `http://localhost:3000`,
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'input', 'X-Requested-With', 'Origin', 'Accept'],
-  }));
+const protoDescriptor = grpc.loadPackageDefinition(packageDefinition);
+const nigger = protoDescriptor.data
 
-  app.use(express.json());
+const saveProduct = async (call: grpc.ServerUnaryCall<any, SaveResponse>, callback: grpc.sendUnaryData<SaveResponse>) => {
+    const { name, photo, currency, price, category, description, action_type, person_id } = call.request;
 
-app.use((req, res, next) => {
-  next();
+    try {
+        await db.insert(products).values({
+            name: name,
+            photoUrl: photo,
+            currency: currency,
+            price: price,
+            description: description,
+            category: category,
+            actionType: action_type,
+            person_id: person_id
+        }).execute();
+
+        callback(null, { 
+            status: 'success', 
+            message: 'Product saved successfully!' 
+        });
+    } catch (err: any) {
+        console.log(err);
+        callback(new Error('error'), {
+            status: 'error',
+            message: 'Failed to save product: ' + err.message
+        });
+    }
+};
+
+const server = new grpc.Server();
+
+server.addService(nigger.Data.service, {
+//   SaveUser: saveUser,
+  SaveProduct: saveProduct,
+//   SaveFullPayload: saveFullPayload,
 });
 
-app.listen(process.env.PORT || 3000);
+const port = '50051';
+server.bindAsync(`localhost:${port}`, grpc.ServerCredentials.createInsecure(), (error, port) => {
+  if (error) {
+    console.error('Error starting server:', error);
+    return;
+  }
+  console.log(`Server running at http://localhost:${port}`);
+  server.start();
+});
+  

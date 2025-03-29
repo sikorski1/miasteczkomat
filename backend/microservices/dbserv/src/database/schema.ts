@@ -55,7 +55,8 @@ export const products = pgTable("products", {
     description: text("description"),
     category: text("category"),
     person_id: integer("person_id").notNull().references(() => persons.id, { onDelete: "cascade" }),
-    actionType: actionTypeEnum("action_type").notNull()
+    actionType: actionTypeEnum("action_type").notNull(),
+    created_at: text("created_at")
 });
 
 
