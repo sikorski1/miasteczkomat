@@ -79,6 +79,7 @@ def create_product_embedding_text(product):
     parts = [
         f"Nazwa: {product.get('name', '')}",
         f"Kategoria: {product.get('category', '')}",
+        f"Typ Oferty: {product.get('actionType', '')}",
         f"Opis: {product.get('description', '')}",
     ]
     return "\n".join(filter(None, parts))

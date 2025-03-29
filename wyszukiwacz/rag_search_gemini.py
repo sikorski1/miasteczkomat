@@ -14,8 +14,8 @@ load_dotenv()
 
 # PostgreSQL Connection Details
 DB_NAME = "postgres"
-DB_USER = "test"
-DB_PASSWORD = "test"
+DB_USER = "admin"
+DB_PASSWORD = 12345
 DB_HOST = "localhost"
 DB_PORT = "5432"
 TABLE_NAME = "products"
@@ -33,7 +33,7 @@ GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 GEMINI_MODEL_NAME = "gemini-1.5-flash"
 
 # Search Configuration
-TOP_K_RESULTS = 5
+TOP_K_RESULTS = 20
 
 # API Key Check
 if LLM_PROVIDER == "google" and not GOOGLE_API_KEY:
@@ -66,7 +66,7 @@ def fetch_products_by_ids(conn, ids):
                 return []
 
             query = f"""
-                SELECT id, name, photoUrl, price, currency, description, category, person_id, actionType
+                SELECT id, name, photourl, price, currency, description, category, person_id, actiontype
                 FROM {TABLE_NAME} WHERE id IN ({placeholders});
             """
             cursor.execute(query, tuple(int_ids))
@@ -132,6 +132,9 @@ def format_products_for_llm(products):
         formatted_string += f"category: {prod.get('category', 'N/A')}\n"
         formatted_string += f"price: {prod.get('price', 'N/A')}\n"
         formatted_string += f"currency: {prod.get('currency', '')}\n"
+        formatted_string += f"person_id: {prod.get('person_id', 'N/A')}\n"
+        formatted_string += f"actiontype: {prod.get('actiontype', 'N/A')}\n"
+        formatted_string += f"photourl: {prod.get('photourl', '')}\n"
         # Shorten description
         desc_short = textwrap.shorten(prod.get('description', 'No description'), width=250, placeholder="...")
         formatted_string += f"description: {desc_short}\n"
@@ -144,6 +147,7 @@ def format_products_for_llm(products):
 # --- UPDATED: Generate LLM response, asking for JSON with original keys ---
 def generate_llm_response(query, retrieved_products_details):
     """Builds the prompt and calls the Google Gemini LLM, requesting JSON with original keys."""
+    print(retrieved_products_details)
     if LLM_PROVIDER == "google":
         try:
             genai.configure(api_key=GOOGLE_API_KEY)
@@ -162,7 +166,7 @@ def generate_llm_response(query, retrieved_products_details):
 
             context = format_products_for_llm(retrieved_products_details)
             # Updated prompt asking for JSON with specific original keys
-            prompt = f"""You are a helpful shopping assistant. Answer the user's query based **only** on the product information provided below in the CONTEXT section. Do not invent products or information. If none of the products provided are a good match, return an empty list or an appropriate message in JSON. Be concise and helpful. Return **only** the data matching the user query in JSON format. The JSON structure should be a list of objects, where each object represents a matching product and includes the keys: "id", "name", "category", "price", "currency", "description".
+            prompt = f"""You are a helpful shopping assistant. Answer the user's query based **only** on the product information provided below in the CONTEXT section. Do not invent products or information. If none of the products provided are a good match, return an empty list or an appropriate message in JSON. Be concise and helpful. Return **only** the data matching the user query in JSON format. The JSON structure should be a list of objects, where each object represents a matching product and includes the keys: "id", "name","photourl", "actiontype", "category", "price", "currency", "description", "person_id".
 
 User Query: "{query}"
 
@@ -245,6 +249,7 @@ if __name__ == "__main__":
                  print(f"   photoUrl: {prod.get('photourl')}") # Use lowercase key
                  # print(f"   description: {prod.get('description')}") # Optional: print full description
                  print(f"   actionType: {prod.get('actiontype')}") # Optional
+                 print(f"   person_id: {prod.get('person_id')}")
                  print("-" * 10)
         elif retrieved_ids:
              print("\n--- IDs found in vector DB (details not fetched from PGSQL) ---")
