@@ -21,13 +21,13 @@ class User(_message.Message):
     INSTAGRAM_FIELD_NUMBER: _ClassVar[int]
     FACEBOOK_FIELD_NUMBER: _ClassVar[int]
     dorm: str
-    room_number: str
+    room_number: int
     name: str
     surname: str
     phone: str
     instagram: str
     facebook: str
-    def __init__(self, dorm: _Optional[str] = ..., room_number: _Optional[str] = ..., name: _Optional[str] = ..., surname: _Optional[str] = ..., phone: _Optional[str] = ..., instagram: _Optional[str] = ..., facebook: _Optional[str] = ...) -> None: ...
+    def __init__(self, dorm: _Optional[str] = ..., room_number: _Optional[int] = ..., name: _Optional[str] = ..., surname: _Optional[str] = ..., phone: _Optional[str] = ..., instagram: _Optional[str] = ..., facebook: _Optional[str] = ...) -> None: ...
 
 class Product(_message.Message):
     __slots__ = ("name", "photo", "currency", "price", "category", "description", "action_type", "person_id")
