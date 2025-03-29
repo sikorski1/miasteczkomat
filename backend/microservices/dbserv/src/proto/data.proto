@@ -23,7 +23,6 @@ message Product {
   string description = 6;
   string action_type = 7;
   int32  person_id = 8;
-  string created_at = 9;
 }
 
 message FullPayload {
