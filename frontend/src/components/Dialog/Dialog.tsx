@@ -28,7 +28,7 @@ export default function Modal({ open, children, onClose }: Props) {
 					/>
 					<motion.dialog
 						ref={dialog}
-						className="flex items-center justify-center bg-transparent bg-gradient-radial from-blue-900/80 to-blue-950/80 border-none rounded-lg overflow-y-auto"
+						className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center bg-transparent border-none rounded-lg"
 						onClose={onClose}
 						initial={{ opacity: 0, scale: 0.9, y: 100 }}
 						animate={{ opacity: 1, scale: 1, y: 0 }}
