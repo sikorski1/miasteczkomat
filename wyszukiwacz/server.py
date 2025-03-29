@@ -63,7 +63,7 @@ class QueryService(query_pb2_grpc.QueryServicer):
 
             user = query_pb2.User(
                 dorm=prod.get('dorm', 'Mock Dorm'),
-                room_number=prod.get('room_number', '101'),
+                room_number=prod.get('room_number', 101),
                 name=prod.get('name', 'John'),
                 surname=prod.get('surname', 'Doe'),
                 phone=prod.get('phone', '123456789'),

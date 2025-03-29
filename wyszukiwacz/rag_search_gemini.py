@@ -264,7 +264,7 @@ if __name__ == "__main__":
                  print(f"   category: {prod.get('category')}")
                  print(f"   price: {prod.get('price')}")
                  print(f"   currency: {prod.get('currency')}")
-                 print(f"   photoUrl: {prod.get('photourl')}") # Use lowercase key
+                 print(f"   photourl: {prod.get('photourl')}") # Use lowercase key
                  # print(f"   description: {prod.get('description')}") # Optional: print full description
                  print(f"   actionType: {prod.get('actiontype')}") # Optional
                  print(f"   person_id: {prod.get('person_id')}")
