@@ -15,7 +15,7 @@ services:
     command: server /data --console-address ":9001"
 
   api-gateway:
-    build: ./services/api-gateway
+    build: ./microservices/api-gateway
     container_name: api-gateway
     ports:
       - "8080:8080"

@@ -74,3 +74,6 @@ exec-sql-file: ## Execute SQL commands from a file (pass SQLFILE=path/to/file.sq
 	@endif
 	@echo "Executing SQL from file: $(SQLFILE)"
 	@cat $(SQLFILE) | docker exec -i $(CONTAINER_NAME) psql -U $(DB_USER) -d $(DB_NAME)
+	
+generate_proto:
+	python -m grpc_tools.protoc -I./query_proto --python_out=./query_proto --pyi_out=./query_proto --grpc_python_out=. ./query_proto/query.proto

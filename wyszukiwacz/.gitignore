@@ -1,3 +1,6 @@
 .venv
 .env
 product_chroma_db/
+query_proto/__pycache__
+query_proto/*.py
+query_proto/*.pyi
