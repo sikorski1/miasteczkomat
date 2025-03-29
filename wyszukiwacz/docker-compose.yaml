@@ -1,0 +1,24 @@
+version: '3.8' # Specifies the Docker Compose version
+
+services:
+  db:
+    image: postgres:15 # Use a specific version (e.g., 15) for stability, or postgres:latest
+    container_name: db_mock # Optional: A friendly name for the container
+    environment:
+      # These MUST match the credentials your Python script will use
+      POSTGRES_DB: test # Replace with your desired DB name
+      POSTGRES_USER: test # Replace with your desired user
+      POSTGRES_PASSWORD: test # Replace with your desired password
+    ports:
+      # Map host port 5432 to container port 5432
+      # If port 5432 is already used on your host, change the first number
+      # e.g., "5433:5432" and update DB_PORT in your Python script
+      - "5432:5432"
+    volumes:
+      # Persist database data even when the container stops/restarts
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped # Automatically restart the container unless manually stopped
+
+volumes:
+  # Define the named volume used above
+  postgres_data:
