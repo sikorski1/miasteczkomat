@@ -9,7 +9,6 @@ export default {
 				'green-custom': "#00733f",
 				'red-custom': "#b00c28",
 				'black-custom': "#231f20",
-
 			},
 		},
 	},
