@@ -5,10 +5,16 @@ import { db } from './database/db';
 import { DataServiceName,  DataClientImpl, SaveResponse, User, Product, FullPayload } from './proto/data';
 import { BinaryWriter, BinaryReader } from '@bufbuild/protobuf/wire';
 
-const packageDefinition = protoLoader.loadSync('./proto/data.proto', {});
+const packageDefinition = protoLoader.loadSync('src/proto/data.proto', {
+    keepCase: true,
+    longs: String,
+    enums: String,
+    defaults: true,
+    oneofs: true,
+});
+const protoDescriptor = grpc.loadPackageDefinition(packageDefinition) as grpc.GrpcObject;
 
-const protoDescriptor = grpc.loadPackageDefinition(packageDefinition);
-const lol = protoDescriptor.data
+const dataPackage = protoDescriptor.data as any;
 
 const saveProduct = async (call: grpc.ServerUnaryCall<any, SaveResponse>, callback: grpc.sendUnaryData<SaveResponse>) => {
     const { name, photo, currency, price, category, description, action_type, person_id } = call.request;
@@ -40,7 +46,7 @@ const saveProduct = async (call: grpc.ServerUnaryCall<any, SaveResponse>, callba
 
 const server = new grpc.Server();
 
-server.addService(lol.Data.service, {
+server.addService(dataPackage.Data.service, {
 //   SaveUser: saveUser,
   SaveProduct: saveProduct,
 //   SaveFullPayload: saveFullPayload,
