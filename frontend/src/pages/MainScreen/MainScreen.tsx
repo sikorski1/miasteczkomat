@@ -9,8 +9,8 @@ import CategoriesModal from "../../components/MainScreen/CategoriesModal";
 import Chat from "../../components/MainScreen/Chat";
 import ChatModal from "../../components/MainScreen/ChatModal";
 import MainSection from "../../components/MainScreen/MainSection";
-
 import UserModal from "../../components/MainScreen/UserModal";
+import { useProduct } from "../../context/QueryContext";
 type Modals = {
 	categories: boolean;
 	user: boolean;
@@ -19,6 +19,7 @@ type Modals = {
 };
 
 export default function MainScreen() {
+	const { query } = useProduct();
 	const [modalsOpen, setModalsOpen] = useState<Modals>({
 		categories: false,
 		user: false,
@@ -39,9 +40,9 @@ export default function MainScreen() {
 			[modalName]: false,
 		}));
 	};
-	const handleSetFilter = (filterType:string) => {
-		setFilter(filterType)
-	}
+	const handleSetFilter = (filterType: string) => {
+		setFilter(filterType);
+	};
 	console.log(modalsOpen);
 	return (
 		<>
@@ -49,10 +50,11 @@ export default function MainScreen() {
 				<Dialog
 					open={modalsOpen["categories"]}
 					onClose={() => {
-					
 						handleModalOnClose("categories");
 					}}>
-					<CategoriesModal onClose={() => handleModalOnClose("chat")} handleSetFilter={handleSetFilter}></CategoriesModal>
+					<CategoriesModal
+						onClose={() => handleModalOnClose("chat")}
+						handleSetFilter={handleSetFilter}></CategoriesModal>
 				</Dialog>
 			)}
 			{modalsOpen["user"] && (
@@ -72,6 +74,8 @@ export default function MainScreen() {
 			)}
 			<main>
 				<Header></Header>
+				<p className="mt-4 text-4xl text-center font-bold">{filter ? filter : "All"}</p>
+				<p className="mb-4 text-4xl text-center font-bold">{query ? query : "No prompts"}</p>
 				<MainSection />
 				<BottomBar handleSetModalOpen={handleSetModalOpen}></BottomBar>
 				<AddButton></AddButton>
