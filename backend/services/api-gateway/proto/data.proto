@@ -21,6 +21,7 @@ message Product {
   double price = 4;
   string category = 5;
   string description = 6;
+  string action_type = 7;
 }
 
 message FullPayload {
@@ -28,8 +29,14 @@ message FullPayload {
   Product product = 2;
 }
 
-service Data {
-  rpc GetUserData(User) returns (User) {}
-  rpc GetProductData(Product) returns (Product) {}
-  rpc GetFullPayload(FullPayload) returns (FullPayload) {}
+message SaveResponse {
+  string status = 1;
+  string message = 2;
 }
+
+service Data {
+  rpc SaveUser(User) returns (SaveResponse);
+  rpc SaveProduct(Product) returns (SaveResponse);
+  rpc SaveFullPayload(FullPayload) returns (SaveResponse);
+}
+
