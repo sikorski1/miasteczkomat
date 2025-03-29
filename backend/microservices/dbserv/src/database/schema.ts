@@ -1,7 +1,15 @@
 import { pgTable, serial, text, integer, timestamp, primaryKey, pgEnum, foreignKey } from "drizzle-orm/pg-core";
 import { relations, sql } from "drizzle-orm";
+export const currencyEnum = pgEnum("currency_enum", ["PLN", "EUR", "Waluta Studencka"]);
 
-export const dormitoryEnum = pgEnum("dormitory_enum", [
+
+export const actionTypeEnum = pgEnum("action_type_enum", ["sprzedaż", "wymiana", "pożyczę"]);
+
+export const categoryEnum = pgEnum("category_enum", [
+    "INNE", "ELEKTRONIKA", "UBRANIA", "ZYWNOŚĆ", "KUCHNIA", "SPRZĄTANIE"
+  ]);
+  
+  export const dormitoryEnum = pgEnum("dormitory_enum", [
     "DS18 Odyseja", "DS19 Apollo", "DS15 Maraton", "DS16 Itaka", "DS17 Arkadia",
     "DS4 Filutek", "DS5 Strumyk", "DS6 Bratek", "DS7 Zaścianek", "DS8 Stokrotka",
     "DS9 Omega", "DS10 Hajduczek", "DS11 Bonus", "DS12 Promyk", "DS13 Straszny Dwór",
@@ -41,12 +49,7 @@ export const persons = pgTable("persons", {
     })
 }));
 
-export const currencyEnum = pgEnum("currency_enum", ["PLN", "EUR", "Waluta Studencka"]);
 
-
-export const actionTypeEnum = pgEnum("action_type_enum", ["sprzedaż", "wymiana", "pożyczę"]);
-
-export const categoryEnum = pgEnum("category_enum", ["INNE","ELEKTRONIKA","UBRANIA", "ŻYWNOŚĆ", "KUCHNIA", "SPRZĄTANIE"]);
 
 export const products = pgTable("products", {
     id: serial("id").primaryKey(),
