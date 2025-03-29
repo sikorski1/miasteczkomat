@@ -114,7 +114,7 @@ export default function AddProductModal() {
 				</select>
 				<div className="w-full flex justify-center">
 					<Button type="submit" className="pt-4 pb-4 pl-6 pr-6 bg-b-gray rounded-xl">
-						Add Product
+						dodaj produkt
 					</Button>
 				</div>
 			</form>
