@@ -10,7 +10,7 @@ message RequestQuery {
 
 message User {
   string dorm = 1;
-  string room_number = 2;
+  int32 room_number = 2;
   string name = 3;
   string surname = 4;
   string phone = 5;
