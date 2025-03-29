@@ -33,7 +33,7 @@ server.addService(dataPackage.Data.service, {
 });
 
 const port = '50051';
-server.bindAsync(`localhost:${port}`, grpc.ServerCredentials.createInsecure(), (error, port) => {
+server.bindAsync(`dbserv:${port}`, grpc.ServerCredentials.createInsecure(), (error, port) => {
   if (error) {
     console.error('Error starting server:', error);
     return;

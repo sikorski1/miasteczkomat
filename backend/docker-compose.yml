@@ -42,6 +42,7 @@ services:
       DATABASE_URL: postgres://admin:12345@db:5432/postgres
     ports:
       - "3000:3000"
+      - "50051:50051"
     command: sh -c "npm run migrate && npm run start"
 
   wyszukiwacz:

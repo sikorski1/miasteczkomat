@@ -8,6 +8,6 @@ export default defineConfig({
   schema: './src/database/schema.ts',
   dialect: 'postgresql',
   dbCredentials: {
-    url: 'postgres://admin:12345@localhost:5432/postgres',
+    url: 'postgres://admin:12345@postgres-db:5432/postgres',
   },
 });
