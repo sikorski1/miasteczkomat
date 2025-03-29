@@ -56,7 +56,7 @@ export default function MainScreen() {
 			)}
 			{modalsOpen["chat"] && (
 				<Dialog open={modalsOpen["chat"]} onClose={() => handleModalOnClose("chat")}>
-					<ChatModal></ChatModal>
+					<ChatModal onClose={() => handleModalOnClose("chat")}></ChatModal>
 				</Dialog>
 			)}
 			{modalsOpen["addProd"] && (
