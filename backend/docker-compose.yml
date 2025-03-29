@@ -19,6 +19,31 @@ services:
     container_name: api-gateway
     ports:
       - "8080:8080"
+  db:
+    image: postgres:17
+    container_name: postgres-db
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: 12345
+      POSTGRES_DB: postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  dbserv:
+    build:
+      context: ./microservices/dbserv
+    container_name: dbserv
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgres://admin:12345@db:5432/postgres
+    ports:
+      - "3000:3000"
+    command: sh -c "npm run migrate && npm run start"
 
 volumes:
+  pgdata:
   minio-data:
