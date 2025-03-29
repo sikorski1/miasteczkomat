@@ -10,9 +10,9 @@ from dotenv import load_dotenv
 # load_dotenv() # Uncomment if needed
 
 # PostgreSQL Connection Details
-DB_NAME = "test"
-DB_USER = "test"
-DB_PASSWORD = "test"
+DB_NAME = "postgres"
+DB_USER = "admin"
+DB_PASSWORD = 12345
 DB_HOST = "localhost"
 DB_PORT = "5432"
 TABLE_NAME = "products" # Make sure this matches your actual table name

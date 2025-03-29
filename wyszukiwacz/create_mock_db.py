@@ -2,9 +2,9 @@ import psycopg2
 import csv
 
 # --- Database Configuration ---
-DB_NAME = "test"
-DB_USER = "test"
-DB_PASSWORD = "test"
+DB_NAME = "postgres"
+DB_USER = "admin"
+DB_PASSWORD = 12345
 DB_HOST = "localhost"
 DB_PORT = "5432"
 # --------------------------
