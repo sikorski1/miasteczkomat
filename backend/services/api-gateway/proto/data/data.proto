@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package data;
 
-option go_package = "./proto;data";
+option go_package = "./data;data";
 
 message User {
   string dorm = 1;
@@ -34,12 +34,16 @@ message SaveResponse {
   string message = 2;
 }
 
+message FullPayloadList {
+  repeated FullPayload payloads = 1;
+}
+
 message Empty {}
 
 service Data {
   rpc SaveUser(User) returns (SaveResponse);
   rpc SaveProduct(Product) returns (SaveResponse);
   rpc SaveFullPayload(FullPayload) returns (SaveResponse);
-  rpc GetProductsAndUsers(Empty) returns (FullPayload);
+  rpc GetAllData(Empty) returns (FullPayloadList);
 }
 

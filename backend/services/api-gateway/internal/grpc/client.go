@@ -1,13 +1,15 @@
 package grpc
 
 import (
-	pb "api-gateway/proto"
+	pbData "api-gateway/proto/data"
+	pbQuery "api-gateway/proto/query"
 	"google.golang.org/grpc"
 )
 
 type Client struct {
-	conn        *grpc.ClientConn
-	DataService pb.DataClient
+	conn         *grpc.ClientConn
+	DataService  pbData.DataClient
+	QueryService pbQuery.QueryClient
 }
 
 func NewClient(addr string) (*Client, error) {
@@ -17,8 +19,9 @@ func NewClient(addr string) (*Client, error) {
 	}
 
 	return &Client{
-		conn:        conn,
-		DataService: pb.NewDataClient(conn),
+		conn:         conn,
+		DataService:  pbData.NewDataClient(conn),
+		QueryService: pbQuery.NewQueryClient(conn),
 	}, nil
 }
 

@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.5.1
 // - protoc             v5.29.3
-// source: proto/data.proto
+// source: data/data.proto
 
 package data
 
@@ -22,6 +22,7 @@ const (
 	Data_SaveUser_FullMethodName        = "/data.Data/SaveUser"
 	Data_SaveProduct_FullMethodName     = "/data.Data/SaveProduct"
 	Data_SaveFullPayload_FullMethodName = "/data.Data/SaveFullPayload"
+	Data_GetAllData_FullMethodName      = "/data.Data/GetAllData"
 )
 
 // DataClient is the client API for Data service.
@@ -31,6 +32,7 @@ type DataClient interface {
 	SaveUser(ctx context.Context, in *User, opts ...grpc.CallOption) (*SaveResponse, error)
 	SaveProduct(ctx context.Context, in *Product, opts ...grpc.CallOption) (*SaveResponse, error)
 	SaveFullPayload(ctx context.Context, in *FullPayload, opts ...grpc.CallOption) (*SaveResponse, error)
+	GetAllData(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*FullPayloadList, error)
 }
 
 type dataClient struct {
@@ -71,6 +73,16 @@ func (c *dataClient) SaveFullPayload(ctx context.Context, in *FullPayload, opts 
 	return out, nil
 }
 
+func (c *dataClient) GetAllData(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*FullPayloadList, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(FullPayloadList)
+	err := c.cc.Invoke(ctx, Data_GetAllData_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // DataServer is the server API for Data service.
 // All implementations must embed UnimplementedDataServer
 // for forward compatibility.
@@ -78,6 +90,7 @@ type DataServer interface {
 	SaveUser(context.Context, *User) (*SaveResponse, error)
 	SaveProduct(context.Context, *Product) (*SaveResponse, error)
 	SaveFullPayload(context.Context, *FullPayload) (*SaveResponse, error)
+	GetAllData(context.Context, *Empty) (*FullPayloadList, error)
 	mustEmbedUnimplementedDataServer()
 }
 
@@ -96,6 +109,9 @@ func (UnimplementedDataServer) SaveProduct(context.Context, *Product) (*SaveResp
 }
 func (UnimplementedDataServer) SaveFullPayload(context.Context, *FullPayload) (*SaveResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SaveFullPayload not implemented")
+}
+func (UnimplementedDataServer) GetAllData(context.Context, *Empty) (*FullPayloadList, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAllData not implemented")
 }
 func (UnimplementedDataServer) mustEmbedUnimplementedDataServer() {}
 func (UnimplementedDataServer) testEmbeddedByValue()              {}
@@ -172,6 +188,24 @@ func _Data_SaveFullPayload_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Data_GetAllData_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DataServer).GetAllData(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Data_GetAllData_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DataServer).GetAllData(ctx, req.(*Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Data_ServiceDesc is the grpc.ServiceDesc for Data service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -191,7 +225,11 @@ var Data_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "SaveFullPayload",
 			Handler:    _Data_SaveFullPayload_Handler,
 		},
+		{
+			MethodName: "GetAllData",
+			Handler:    _Data_GetAllData_Handler,
+		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "proto/data.proto",
+	Metadata: "data/data.proto",
 }
