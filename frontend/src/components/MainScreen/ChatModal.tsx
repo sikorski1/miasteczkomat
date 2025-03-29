@@ -1,0 +1,35 @@
+import { X } from "lucide-react";
+import { useState } from "react";
+import { useProduct } from "../../context/QueryContext";
+export default function AddProdModal({ onClose }) {
+	const [localQuery, setLocalQuery] = useState("");
+	const { setQuery } = useProduct();
+	const handleSearch = () => {
+		setQuery(localQuery);
+		onClose();
+	};
+
+	return (
+		<div className="relative flex flex-col w-[400px] p-12 bg-white rounded-lg shadow-md gap-4 ">
+			<button onClick={onClose} className="absolute right-6 top-6 p-2">
+				<X className="w-10 h-10" />
+			</button>
+			<p className="text-2xl font-semibold mb-2">Enter a prompt to search products</p>
+			<input
+				type="text"
+				value={localQuery}
+				onChange={e => setLocalQuery(e.target.value)}
+				onKeyDown={e => e.key === "Enter" && handleSearch()}
+				className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+				placeholder="Type a product name..."
+			/>
+			<div className="w-full flex justify-end">
+				<button
+					onClick={handleSearch}
+					className=" p-6 mt-6 bg-green text-white py-2 rounded-md hover:bg-green disabled:bg-gray-400 text-2xl">
+					submit
+				</button>
+			</div>
+		</div>
+	);
+}
