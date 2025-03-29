@@ -6,13 +6,16 @@ import ms from "../../assets/miasteczkomat.png";
 import AddButton from "../../components/AddButton";
 import Chat from "../../components/MainScreen/Chat";
 import MainSection from "../../components/MainScreen/MainSection";
+import MainContainer from "../../components/MainScreen/CategoriesModal";
+import AddProductModal from "../../components/MainScreen/AddProductModal";
+
 export default function MainScreen() {
 	return (
 		<main>
 			<Header></Header>
-			<MainSection/>
 			<BottomBar></BottomBar>
 			<AddButton></AddButton>
+			<AddProductModal></AddProductModal>
 			<Chat></Chat>
 		</main>
 	);
