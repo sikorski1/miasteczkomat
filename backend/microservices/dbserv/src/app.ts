@@ -8,7 +8,7 @@ import { BinaryWriter, BinaryReader } from '@bufbuild/protobuf/wire';
 const packageDefinition = protoLoader.loadSync('./proto/data.proto', {});
 
 const protoDescriptor = grpc.loadPackageDefinition(packageDefinition);
-const nigger = protoDescriptor.data
+const lol = protoDescriptor.data
 
 const saveProduct = async (call: grpc.ServerUnaryCall<any, SaveResponse>, callback: grpc.sendUnaryData<SaveResponse>) => {
     const { name, photo, currency, price, category, description, action_type, person_id } = call.request;
@@ -40,7 +40,7 @@ const saveProduct = async (call: grpc.ServerUnaryCall<any, SaveResponse>, callba
 
 const server = new grpc.Server();
 
-server.addService(nigger.Data.service, {
+server.addService(lol.Data.service, {
 //   SaveUser: saveUser,
   SaveProduct: saveProduct,
 //   SaveFullPayload: saveFullPayload,
