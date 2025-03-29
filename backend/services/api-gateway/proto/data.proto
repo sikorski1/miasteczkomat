@@ -34,9 +34,12 @@ message SaveResponse {
   string message = 2;
 }
 
+message Empty {}
+
 service Data {
   rpc SaveUser(User) returns (SaveResponse);
   rpc SaveProduct(Product) returns (SaveResponse);
   rpc SaveFullPayload(FullPayload) returns (SaveResponse);
+  rpc GetProductsAndUsers(Empty) returns (FullPayload);
 }
 
