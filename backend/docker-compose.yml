@@ -15,7 +15,7 @@ services:
     command: server /data --console-address ":9001"
 
   api-gateway:
-    build: ./services/api-gateway
+    build: ./microservices/api-gateway
     container_name: api-gateway
     ports:
       - "8080:8080"
@@ -43,6 +43,23 @@ services:
     ports:
       - "3000:3000"
     command: sh -c "npm run migrate && npm run start"
+
+  wyszukiwacz:
+    build:
+      context: ../wyszukiwacz
+      dockerfile: Dockerfile
+    environment:
+      DB_NAME: postgres
+      DB_USER: admin
+      DB_PASSWORD: 12345
+      DB_HOST: postgres
+      DB_PORT: 5432
+    depends_on:
+      - db
+    ports:
+      - "50050:50050" # Expose the gRPC server port
+    volumes:
+      - ../wyszukiwacz:/app
 
 volumes:
   pgdata:

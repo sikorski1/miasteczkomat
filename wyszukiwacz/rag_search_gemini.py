@@ -7,6 +7,7 @@ from decimal import Decimal
 import os
 from dotenv import load_dotenv
 import textwrap
+import subprocess
 # import json # Uncomment if parsing JSON output
 
 # --- Configuration ---
@@ -16,7 +17,7 @@ load_dotenv()
 DB_NAME = "postgres"
 DB_USER = "admin"
 DB_PASSWORD = 12345
-DB_HOST = "localhost"
+DB_HOST = "postgres-db"
 DB_PORT = "5432"
 TABLE_NAME = "products"
 
@@ -88,6 +89,7 @@ def get_embedding_model():
         return model
     except Exception as e: print(f"Error loading embedding model: {e}"); return None
 
+
 def get_chroma_collection():
     """Initializes ChromaDB client and gets the collection."""
     print(f"Initializing ChromaDB client (persistent path: {CHROMA_PATH})...")
@@ -96,13 +98,30 @@ def get_chroma_collection():
         print(f"Getting Chroma collection: {COLLECTION_NAME}...")
         collection = client.get_collection(name=COLLECTION_NAME)
         print(f"Using Chroma collection: {collection.name} (Count: {collection.count()})")
-        if collection.count() == 0: print("\nWARNING: ChromaDB collection is empty! Run 'index_products.py' first.\n")
+        
+        # Check if the collection is empty
+        if collection.count() == 0:
+            print("\nWARNING: ChromaDB collection is empty! Running 'index_products.py' to populate it...\n")
+            # Run index_products.py as a subprocess
+            result = subprocess.run(
+                ["python", "index_products.py"],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True
+            )
+            if result.returncode != 0:
+                print(f"Error running 'index_products.py': {result.stderr}")
+                return None
+            print(result.stdout)
+            # Reinitialize the collection after indexing
+            collection = client.get_collection(name=COLLECTION_NAME)
+            print(f"Chroma collection reloaded: {collection.name} (Count: {collection.count()})")
+        
         return collection
     except Exception as e:
         print(f"Error connecting to or getting ChromaDB collection: {e}")
-        print("Did you run 'index_products.py' first?")
         return None
-
+    
 def search_vector_db(collection, model, query, k):
     """Embeds the query and searches ChromaDB."""
     if not collection or not model: print("Error: Chroma collection or embedding model not available."); return []
@@ -147,7 +166,6 @@ def format_products_for_llm(products):
 # --- UPDATED: Generate LLM response, asking for JSON with original keys ---
 def generate_llm_response(query, retrieved_products_details):
     """Builds the prompt and calls the Google Gemini LLM, requesting JSON with original keys."""
-    print(retrieved_products_details)
     if LLM_PROVIDER == "google":
         try:
             genai.configure(api_key=GOOGLE_API_KEY)

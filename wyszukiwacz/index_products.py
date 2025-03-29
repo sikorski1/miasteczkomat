@@ -13,7 +13,7 @@ from dotenv import load_dotenv
 DB_NAME = "postgres"
 DB_USER = "admin"
 DB_PASSWORD = 12345
-DB_HOST = "localhost"
+DB_HOST = "postgres-db"
 DB_PORT = "5432"
 TABLE_NAME = "products" # Make sure this matches your actual table name
 
@@ -192,7 +192,7 @@ def index_products_batch(collection, model, products):
 if __name__ == "__main__":
     print("--- Starting Product Indexing Process ---")
 
-    CLEAR_EXISTING_COLLECTION = False # Set True to wipe Chroma collection first
+    CLEAR_EXISTING_COLLECTION = True # Set True to wipe Chroma collection first
 
     db_conn = connect_db()
     if not db_conn:
