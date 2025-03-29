@@ -2,8 +2,11 @@ import * as grpc from '@grpc/grpc-js';
 import * as protoLoader from '@grpc/proto-loader';
 import { products } from './database/schema';
 import { db } from './database/db';
+import { ProductService } from './api/services/productService';
+import { UserService } from './api/services/userService'
 import { DataServiceName,  DataClientImpl, SaveResponse, User, Product, FullPayload } from './proto/data';
 import { BinaryWriter, BinaryReader } from '@bufbuild/protobuf/wire';
+import { FullService } from './api/services/fullService';
 
 const packageDefinition = protoLoader.loadSync('src/proto/data.proto', {
     keepCase: true,
@@ -13,43 +16,19 @@ const packageDefinition = protoLoader.loadSync('src/proto/data.proto', {
     oneofs: true,
 });
 const protoDescriptor = grpc.loadPackageDefinition(packageDefinition) as grpc.GrpcObject;
-
 const dataPackage = protoDescriptor.data as any;
-
-const saveProduct = async (call: grpc.ServerUnaryCall<any, SaveResponse>, callback: grpc.sendUnaryData<SaveResponse>) => {
-    const { name, photo, currency, price, category, description, action_type, person_id } = call.request;
-
-    try {
-        await db.insert(products).values({
-            name: name,
-            photoUrl: photo,
-            currency: currency,
-            price: price,
-            description: description,
-            category: category,
-            actionType: action_type,
-            person_id: person_id
-        }).execute();
-
-        callback(null, { 
-            status: 'success', 
-            message: 'Product saved successfully!' 
-        });
-    } catch (err: any) {
-        console.log(err);
-        callback(new Error('error'), {
-            status: 'error',
-            message: 'Failed to save product: ' + err.message
-        });
-    }
-};
 
 const server = new grpc.Server();
 
+const productService = new ProductService()
+const userService = new UserService()
+const fullService = new FullService
+
+
 server.addService(dataPackage.Data.service, {
-//   SaveUser: saveUser,
-  SaveProduct: saveProduct,
-//   SaveFullPayload: saveFullPayload,
+    SaveUser: userService.createUser,
+    SaveProduct: productService.saveProduct,
+    SaveFullPayload: fullService.saveFullPayload,
 });
 
 const port = '50051';

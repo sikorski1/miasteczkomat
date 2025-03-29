@@ -1,5 +1,5 @@
-import { pgTable, serial, text, integer, varchar, primaryKey, pgEnum, foreignKey } from "drizzle-orm/pg-core";
-import { relations } from "drizzle-orm";
+import { pgTable, serial, text, integer, timestamp, primaryKey, pgEnum, foreignKey } from "drizzle-orm/pg-core";
+import { relations, sql } from "drizzle-orm";
 
 export const dormitoryEnum = pgEnum("dormitory_enum", [
     "DS18 Odyseja", "DS19 Apollo", "DS15 Maraton", "DS16 Itaka", "DS17 Arkadia",
@@ -56,7 +56,7 @@ export const products = pgTable("products", {
     category: text("category"),
     person_id: integer("person_id").notNull().references(() => persons.id, { onDelete: "cascade" }),
     actionType: actionTypeEnum("action_type").notNull(),
-    created_at: text("created_at")
+    created_at: timestamp("created_at", { withTimezone: true }).default(sql`CURRENT_TIMESTAMP`)
 });
 
 

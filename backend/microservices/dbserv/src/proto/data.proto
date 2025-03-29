@@ -7,7 +7,7 @@ option go_package = "./proto;data";
 message User {
   string dorm = 1;
   string room_number = 2;
-  string name = 3;
+  string user_name = 3;
   string surname = 4;
   string phone = 5;
   string instagram = 6;
@@ -23,6 +23,7 @@ message Product {
   string description = 6;
   string action_type = 7;
   int32  person_id = 8;
+  string created_at = 9;
 }
 
 message FullPayload {
