@@ -51,6 +51,7 @@ func main() {
 
 	r.Post("/data", dataHandler.UploadData)
 	r.Post("/query", dataHandler.GetProductsByQuery)
+	r.Get("/all-data", dataHandler.GetAllData)
 
 	log.Printf("API Gateway started on port %s", cfg.HTTPPort)
 	if err = http.ListenAndServe(":"+cfg.HTTPPort, r); err != nil {

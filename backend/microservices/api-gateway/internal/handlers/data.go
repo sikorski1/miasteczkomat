@@ -22,9 +22,14 @@ type DataPayload struct {
 	Product ProductPayload `json:"product"`
 }
 
+type GetDataPayload struct {
+	User    UserPayload       `json:"user"`
+	Product GetProductPayload `json:"product"`
+}
+
 type UserPayload struct {
 	Dorm       string `json:"dorm"`
-	RoomNumber string `json:"room_number"`
+	RoomNumber int32  `json:"room_number"`
 	Name       string `json:"name"`
 	Surname    string `json:"surname"`
 	Phone      string `json:"phone"`
@@ -40,6 +45,17 @@ type ProductPayload struct {
 	Category    string  `json:"category"`
 	Description string  `json:"description"`
 	ActionType  string  `json:"action_type"`
+}
+
+type GetProductPayload struct {
+	Name        string  `json:"name"`
+	Photo       string  `json:"photo"`
+	Currency    string  `json:"currency"`
+	Price       float64 `json:"price"`
+	Category    string  `json:"category"`
+	Description string  `json:"description"`
+	ActionType  string  `json:"action_type"`
+	CreatedAt   string  `json:"created_at"`
 }
 
 func NewDataHandler(grpcDataClient *grpc.Client, grpcQueryClient *grpc.Client, minioClient *minio.Client) *DataHandler {
@@ -137,6 +153,46 @@ func (h *DataHandler) GetProductsByQuery(w http.ResponseWriter, r *http.Request)
 				Category:    item.Product.Category,
 				Description: item.Product.Description,
 				ActionType:  item.Product.ActionType,
+			},
+		})
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(results)
+}
+
+func (h *DataHandler) GetAllData(w http.ResponseWriter, r *http.Request) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	resp, err := h.grpcDataClient.DataService.GetAllData(ctx, &pbData.Empty{})
+	if err != nil {
+		http.Error(w, "gRPC error: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	var results []GetDataPayload
+
+	for _, item := range resp.Payloads {
+		results = append(results, GetDataPayload{
+			User: UserPayload{
+				Dorm:       item.User.Dorm,
+				RoomNumber: item.User.RoomNumber,
+				Name:       item.User.UserName,
+				Surname:    item.User.Surname,
+				Phone:      item.User.Phone,
+				Instagram:  item.User.Instagram,
+				Facebook:   item.User.Facebook,
+			},
+			Product: GetProductPayload{
+				Name:        item.Product.Name,
+				Photo:       item.Product.Photo,
+				Currency:    item.Product.Currency,
+				Price:       item.Product.Price,
+				Category:    item.Product.Category,
+				Description: item.Product.Description,
+				ActionType:  item.Product.ActionType,
+				CreatedAt:   item.Product.CreatedAt,
 			},
 		})
 	}
