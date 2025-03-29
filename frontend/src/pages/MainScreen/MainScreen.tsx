@@ -8,11 +8,8 @@ import CategoriesModal from "../../components/MainScreen/CategoriesModal";
 import Chat from "../../components/MainScreen/Chat";
 import ChatModal from "../../components/MainScreen/ChatModal";
 import MainSection from "../../components/MainScreen/MainSection";
-
-import MainContainer from "../../components/MainScreen/CategoriesModal";
-import AddProductModal from "../../components/MainScreen/AddProductModal";
-
 import UserModal from "../../components/MainScreen/UserModal";
+import { useProduct } from "../../context/QueryContext";
 type Modals = {
 	categories: boolean;
 	user: boolean;
@@ -21,12 +18,14 @@ type Modals = {
 };
 
 export default function MainScreen() {
+	const { query } = useProduct();
 	const [modalsOpen, setModalsOpen] = useState<Modals>({
 		categories: false,
 		user: false,
 		chat: false,
 		addProd: false,
 	});
+	const [filter, setFilter] = useState<string | null>(null);
 	const handleSetModalOpen = (modalName: string) => {
 		setModalsOpen((prev) => ({
 			...prev,
@@ -34,19 +33,28 @@ export default function MainScreen() {
 		}));
 	};
 	const handleModalOnClose = (modalName: string) => {
-		setModalsOpen((prev) => ({
+		console.log(123);
+		setModalsOpen(prev => ({
 			...prev,
 			[modalName]: false,
 		}));
 	};
+	const handleSetFilter = (filterType: string) => {
+		setFilter(filterType);
+	};
+	console.log(modalsOpen);
 	return (
 		<>
 			{modalsOpen["categories"] && (
 				<Dialog
 					open={modalsOpen["categories"]}
-					onClose={() => handleModalOnClose("categories")}
-				>
-					<CategoriesModal></CategoriesModal>
+
+					onClose={() => {
+						handleModalOnClose("categories");
+					}}>
+					<CategoriesModal
+						onClose={() => handleModalOnClose("chat")}
+						handleSetFilter={handleSetFilter}></CategoriesModal>
 				</Dialog>
 			)}
 			{modalsOpen["user"] && (
@@ -66,6 +74,8 @@ export default function MainScreen() {
 			)}
 			<main>
 				<Header></Header>
+				<p className="mt-4 text-4xl text-center font-bold">{filter ? filter : "All"}</p>
+				<p className="mb-4 text-4xl text-center font-bold">{query ? query : "No prompts"}</p>
 				<MainSection />
 				<BottomBar handleSetModalOpen={handleSetModalOpen}></BottomBar>
 				<AddButton handleSetModalOpen={handleSetModalOpen}></AddButton>

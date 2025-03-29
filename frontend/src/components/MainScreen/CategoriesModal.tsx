@@ -1,6 +1,9 @@
-import Card from "../Card";
 import { Category } from "../../types/MainContainerType";
-
+import Card from "../Card";
+type Props = {
+	handleFilter: any;
+	onClose:any
+};
 const data: Category[] = [
 	{
 		title: "Elektronika",
@@ -29,12 +32,12 @@ const data: Category[] = [
 	},
 ];
 
-export default function MainContainer() {
+export default function CategoriesModal({ onClose, handleSetFilter }: Props) {
 	return (
-		<div className="container mx-auto p-4">
+		<div className="w-[400px] p-4">
 			<div className="grid grid-cols-2 gap-4">
 				{data.map((item: Category, index: number) => (
-					<Card key={item.title} data={item} index={index} />
+					<Card handleFilters={handleSetFilter} onClose={onClose} key={item.title} data={item} index={index} />
 				))}
 			</div>
 		</div>

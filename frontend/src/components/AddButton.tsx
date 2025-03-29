@@ -6,7 +6,8 @@ type Props = {
 
 export default function AddButton({ handleSetModalOpen }: Props) {
 	return (
-		<div className="absolute absolute bottom-24 right-4">
+
+		<div className="fixed absolute bottom-24 right-4">
 			<button
 				onClick={() => handleSetModalOpen("addProd")}
 				className="size-16 bg-red rounded-full flex items-center justify-center"
