@@ -11,11 +11,11 @@ PYTHON = python3
 POPULATE_SCRIPT = populate_db.py
 
 # Docker container name (from docker-compose.yml)
-CONTAINER_NAME = db_mock
+CONTAINER_NAME = postgres-db
 
 # Database connection details (must match docker-compose.yml and script)
-DB_NAME = test
-DB_USER = test
+DB_NAME = postgres
+DB_USER = admin
 
 # Default target (executed when running just 'make')
 .DEFAULT_GOAL := help

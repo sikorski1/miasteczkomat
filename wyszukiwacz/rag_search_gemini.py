@@ -13,7 +13,7 @@ import textwrap
 load_dotenv()
 
 # PostgreSQL Connection Details
-DB_NAME = "test"
+DB_NAME = "postgres"
 DB_USER = "test"
 DB_PASSWORD = "test"
 DB_HOST = "localhost"
