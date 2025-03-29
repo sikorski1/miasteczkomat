@@ -7,13 +7,6 @@
 	padding: 0;
 }
 
-:root {
-  --white: #ffffff;
-	--green: #00733f;
-	--grey: #6f6f6f;
-	--red: #b00c28;
-	--black: #231f20;
-}
 
 html {
 	height: 100%;
