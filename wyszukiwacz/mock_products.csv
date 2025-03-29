@@ -1,4 +1,4 @@
-name,photoUrl,price,currency,description,category,person_id,actionType
+name,photo_url,price,currency,description,category,person_id,action_type
 Kurtka zimowa,https://example.com/product_1.jpg,74,EUR,"Gruba, dobrze grzeje, stan bardzo dobry.",Ubrania,8,wymiana
 Odkurzacz ręczny,https://example.com/product_2.jpg,11,EUR,Pożyczę na weekend. Proszę o zwrot.,Inne,8,sprzedaż
 Makaron + sos pomidorowy,https://example.com/product_3.jpg,72,Waluta Studencka,Zestaw na gotowy obiad.,Żywność,17,pożyczę

@@ -60,7 +60,7 @@ def fetch_all_products(conn):
                     description,
                     category,
                     person_id,
-                    actionType
+                    action_type
                 FROM {TABLE_NAME};
             """
             # ---------------------------------------------
@@ -79,7 +79,7 @@ def create_product_embedding_text(product):
     parts = [
         f"Nazwa: {product.get('name', '')}",
         f"Kategoria: {product.get('category', '')}",
-        f"Typ Oferty: {product.get('actionType', '')}",
+        f"Typ Oferty: {product.get('action_type', '')}",
         f"Opis: {product.get('description', '')}",
     ]
     return "\n".join(filter(None, parts))

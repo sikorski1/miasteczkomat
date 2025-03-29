@@ -67,7 +67,7 @@ def fetch_products_by_ids(conn, ids):
                 return []
 
             query = f"""
-                SELECT id, name, photourl, price, currency, description, category, person_id, actiontype
+                SELECT id, name, photo_url, price, currency, description, category, person_id, action_type
                 FROM {TABLE_NAME} WHERE id IN ({placeholders});
             """
             cursor.execute(query, tuple(int_ids))
@@ -152,8 +152,8 @@ def format_products_for_llm(products):
         formatted_string += f"price: {prod.get('price', 'N/A')}\n"
         formatted_string += f"currency: {prod.get('currency', '')}\n"
         formatted_string += f"person_id: {prod.get('person_id', 'N/A')}\n"
-        formatted_string += f"actiontype: {prod.get('actiontype', 'N/A')}\n"
-        formatted_string += f"photourl: {prod.get('photourl', '')}\n"
+        formatted_string += f"action_type: {prod.get('action_type', 'N/A')}\n"
+        formatted_string += f"photo_url: {prod.get('photo_url', '')}\n"
         # Shorten description
         desc_short = textwrap.shorten(prod.get('description', 'No description'), width=250, placeholder="...")
         formatted_string += f"description: {desc_short}\n"
@@ -184,7 +184,7 @@ def generate_llm_response(query, retrieved_products_details):
 
             context = format_products_for_llm(retrieved_products_details)
             # Updated prompt asking for JSON with specific original keys
-            prompt = f"""You are a helpful shopping assistant. Answer the user's query based **only** on the product information provided below in the CONTEXT section. Do not invent products or information. If none of the products provided are a good match, return an empty list or an appropriate message in JSON. Be concise and helpful. Return **only** the data matching the user query in JSON format. The JSON structure should be a list of objects, where each object represents a matching product and includes the keys: "id", "name","photourl", "actiontype", "category", "price", "currency", "description", "person_id".
+            prompt = f"""You are a helpful shopping assistant. Answer the user's query based **only** on the product information provided below in the CONTEXT section. Do not invent products or information. If none of the products provided are a good match, return an empty list or an appropriate message in JSON. Be concise and helpful. Return **only** the data matching the user query in JSON format. The JSON structure should be a list of objects, where each object represents a matching product and includes the keys: "id", "name","photo_url", "action_type", "category", "price", "currency", "description", "person_id".
 
 User Query: "{query}"
 
@@ -264,9 +264,9 @@ if __name__ == "__main__":
                  print(f"   category: {prod.get('category')}")
                  print(f"   price: {prod.get('price')}")
                  print(f"   currency: {prod.get('currency')}")
-                 print(f"   photourl: {prod.get('photourl')}") # Use lowercase key
+                 print(f"   photo_url: {prod.get('photo_url')}") # Use lowercase key
                  # print(f"   description: {prod.get('description')}") # Optional: print full description
-                 print(f"   actionType: {prod.get('actiontype')}") # Optional
+                 print(f"   action_type: {prod.get('action_type')}") # Optional
                  print(f"   person_id: {prod.get('person_id')}")
                  print("-" * 10)
         elif retrieved_ids:

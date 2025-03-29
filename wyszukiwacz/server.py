@@ -52,12 +52,12 @@ class QueryService(query_pb2_grpc.QueryServicer):
             # Create a Product object
             product = query_pb2.Product(
                 name=prod.get('name', ''),
-                photo=prod.get('photourl', ''),
+                photo=prod.get('photo_url', ''),
                 currency=prod.get('currency', ''),
                 price=float(prod.get('price', 0.0)),
                 category=prod.get('category', ''),
                 description=prod.get('description', ''),
-                action_type=prod.get('actiontype', ''),
+                action_type=prod.get('action_type', ''),
                 person_id=str(prod.get('person_id', ''))
             )
 

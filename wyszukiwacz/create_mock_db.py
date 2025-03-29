@@ -15,13 +15,13 @@ CREATE_TABLE_SQL = f"""
 CREATE TABLE IF NOT EXISTS {TABLE_NAME} (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
-    photourl TEXT,
+    photo_url TEXT,
     price DECIMAL(10, 2),
     currency VARCHAR(20),
     description TEXT,
     category VARCHAR(100),
     person_id INTEGER NOT NULL,
-    actionType VARCHAR(50)
+    action_type VARCHAR(50)
 );
 """
 # ------------------
@@ -50,7 +50,7 @@ def insert_products_from_csv(csv_file_path):
 
         # Prepare the insert query
         insert_query = f"""
-        INSERT INTO {TABLE_NAME} (name, photourl, price, currency, description, category, person_id, actionType)
+        INSERT INTO {TABLE_NAME} (name, photo_url, price, currency, description, category, person_id, action_type)
         VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
         ON CONFLICT DO NOTHING;
         """
@@ -63,13 +63,13 @@ def insert_products_from_csv(csv_file_path):
                 try:
                     cursor.execute(insert_query, (
                         row['name'],
-                        row['photourl'],
+                        row['photo_url'],
                         float(row['price']),
                         row['currency'],
                         row['description'],
-                        row['category'],
+                        row['category'].upper(),
                         int(row['person_id']),
-                        row['actionType']
+                        row['action_type']
                     ))
                     inserted_count += cursor.rowcount
                 except psycopg2.DataError as data_err:
