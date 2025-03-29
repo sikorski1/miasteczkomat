@@ -1,5 +1,6 @@
 import psycopg2
 import csv
+import random
 
 # --- Database Configuration ---
 DB_NAME = "postgres"
@@ -68,7 +69,7 @@ def insert_products_from_csv(csv_file_path):
                         row['currency'],
                         row['description'],
                         row['category'].upper(),
-                        int(row['person_id']),
+                        random.randint(50, 80),
                         row['action_type']
                     ))
                     inserted_count += cursor.rowcount

@@ -54,7 +54,7 @@ def fetch_all_products(conn):
                 SELECT
                     id,  -- <<< USING the correct unique ID column name
                     name,
-                    photourl,
+                    photo_url,
                     price,
                     currency,
                     description,
