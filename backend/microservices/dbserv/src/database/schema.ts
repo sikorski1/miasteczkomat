@@ -6,7 +6,7 @@ export const currencyEnum = pgEnum("currency_enum", ["PLN", "EUR", "Waluta Stude
 export const actionTypeEnum = pgEnum("action_type_enum", ["sprzedaż", "wymiana", "pożyczę"]);
 
 export const categoryEnum = pgEnum("category_enum", [
-    "INNE", "ELEKTRONIKA", "UBRANIA", "ZYWNOŚĆ", "KUCHNIA", "SPRZĄTANIE"
+    "INNE", "ELEKTRONIKA", "UBRANIA", "ŻYWNOŚĆ", "KUCHNIA", "SPRZĄTANIE"
   ]);
   
   export const dormitoryEnum = pgEnum("dormitory_enum", [
