@@ -7,7 +7,7 @@ option go_package = "./data;data";
 message User {
   string dorm = 1;
   string room_number = 2;
-  string name = 3;
+  string user_name = 3;
   string surname = 4;
   string phone = 5;
   string instagram = 6;
