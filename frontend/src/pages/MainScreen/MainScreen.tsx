@@ -9,6 +9,10 @@ import CategoriesModal from "../../components/MainScreen/CategoriesModal";
 import Chat from "../../components/MainScreen/Chat";
 import ChatModal from "../../components/MainScreen/ChatModal";
 import MainSection from "../../components/MainScreen/MainSection";
+
+import MainContainer from "../../components/MainScreen/CategoriesModal";
+import AddProductModal from "../../components/MainScreen/AddProductModal";
+
 import UserModal from "../../components/MainScreen/UserModal";
 type Modals = {
 	categories: boolean;
@@ -16,6 +20,7 @@ type Modals = {
 	chat: boolean;
 	addProd: boolean;
 };
+
 
 export default function MainScreen() {
 	const [modalsOpen, setModalsOpen] = useState<Modals>({
