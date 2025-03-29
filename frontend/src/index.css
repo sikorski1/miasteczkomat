@@ -8,6 +8,13 @@
 }
 
 
+:root {
+  --white-custom: #ffffff;
+  --gray-custom: #6f6f6f;
+  --green-custom: #00733f;
+  --red-custom: #b00c28;
+  --black-custom: #231f20;
+}
 html {
 	height: 100%;
 	font-size: 62.5%;
@@ -19,4 +26,44 @@ html {
 body {
 	font-family: "Montserrat", sans-serif;
 	font-size: 1.6rem;
+}
+
+.bg-white {
+  background-color: var(--white-custom);
+}
+
+.bg-gray {
+  background-color: var(--gray-custom);
+}
+
+.bg-green {
+  background-color: var(--green-custom);
+}
+
+.bg-red {
+  background-color: var(--red-custom);
+}
+
+.bg-black {
+  background-color: var(--black-custom);
+}
+
+.text-white {
+  color: var(--white-custom);
+}
+
+.text-gray {
+  color: var(--gray-custom);
+}
+
+.text-green {
+  color: var(--green-custom);
+}
+
+.text-red {
+  color: var(--red-custom);
+}
+
+.text-black {
+  color: var(--black-custom);
 }
