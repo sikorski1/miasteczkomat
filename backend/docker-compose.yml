@@ -47,14 +47,19 @@ services:
   wyszukiwacz:
     build:
       context: ../wyszukiwacz
-    container_name: wyszukiwacz
+      dockerfile: Dockerfile
+    environment:
+      DB_NAME: postgres
+      DB_USER: admin
+      DB_PASSWORD: 12345
+      DB_HOST: postgres
+      DB_PORT: 5432
     depends_on:
       - db
-    environment:
-      DATABASE_URL: postgres://admin:12345@db:5432/postgres
     ports:
-      - "50052:50052"
-    command: python server.py
+      - "50050:50050" # Expose the gRPC server port
+    volumes:
+      - ../wyszukiwacz:/app
 
 volumes:
   pgdata:

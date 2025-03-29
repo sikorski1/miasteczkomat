@@ -13,8 +13,14 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the rest of the application code into the container
 COPY . .
 
-# Expose the port that the gRPC server will run on
-EXPOSE 50052
+# Copy the startup script
+COPY start.sh .
 
-# Set the default command to run the gRPC server
-CMD ["python", "server.py"]
+# Make the startup script executable
+RUN chmod +x start.sh
+
+# Expose the port that the gRPC server will run on
+EXPOSE 50050
+
+# Set the default command to run the startup script
+CMD ["./start.sh"]

@@ -1,7 +1,8 @@
 from concurrent import futures
 import grpc
 from query_proto import query_pb2, query_pb2_grpc
-from rag_search_gemini import get_embedding_model, get_chroma_collection, search_vector_db, connect_db, fetch_products_by_ids
+from rag_search_gemini import get_embedding_model, get_chroma_collection, search_vector_db, connect_db, fetch_products_by_ids, generate_llm_response
+import json  # Add this import for parsing JSON strings
 
 # --- Configuration ---
 TOP_K_RESULTS = 20
@@ -12,7 +13,7 @@ chroma_collection = get_chroma_collection()
 db_conn = connect_db()
 
 class QueryService(query_pb2_grpc.QueryServicer):
-    def GetProductsByQuery(self, request, context):
+   def GetProductsByQuery(self, request, context):
         # Step 1: Embed the query and search the vector database
         retrieved_ids = search_vector_db(chroma_collection, embedding_model, request.query, TOP_K_RESULTS)
         if not retrieved_ids:
@@ -27,9 +28,24 @@ class QueryService(query_pb2_grpc.QueryServicer):
             context.set_details("No product details found in the database.")
             return query_pb2.FullPayloadList(payloads=[])
 
-        # Step 3: Map the retrieved products to the gRPC response format
+        # Step 3: Generate LLM response and parse it
+        try:
+            llm_response_string = generate_llm_response(request.query, retrieved_full_products)
+            llm_response = json.loads(llm_response_string)  # Parse the JSON string into a list of dictionaries
+            if not isinstance(llm_response, list):
+                raise ValueError("Parsed LLM response is not a list.")
+        except json.JSONDecodeError as e:
+            context.set_code(grpc.StatusCode.INTERNAL)
+            context.set_details(f"Error parsing LLM response: {e}")
+            return query_pb2.FullPayloadList(payloads=[])
+        except Exception as e:
+            context.set_code(grpc.StatusCode.INTERNAL)
+            context.set_details(f"Error generating LLM response: {e}")
+            return query_pb2.FullPayloadList(payloads=[])
+
+        # Step 4: Map the parsed response to the gRPC response format
         payloads = []
-        for prod in retrieved_full_products:
+        for prod in llm_response:
             if not prod:
                 continue
 
@@ -45,15 +61,14 @@ class QueryService(query_pb2_grpc.QueryServicer):
                 person_id=str(prod.get('person_id', ''))
             )
 
-            # Create a User object (mocked for now, replace with actual user data if available)
             user = query_pb2.User(
-                dorm="Mock Dorm",
-                room_number="101",
-                name="John",
-                surname="Doe",
-                phone="123456789",
-                instagram="john_doe",
-                facebook="john.doe"
+                dorm=prod.get('dorm', 'Mock Dorm'),
+                room_number=prod.get('room_number', '101'),
+                name=prod.get('name', 'John'),
+                surname=prod.get('surname', 'Doe'),
+                phone=prod.get('phone', '123456789'),
+                instagram=prod.get('instagram', 'john_doe'),
+                facebook=prod.get('facebook', 'john.doe')
             )
 
             # Create a FullPayload object
@@ -66,9 +81,9 @@ class QueryService(query_pb2_grpc.QueryServicer):
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     query_pb2_grpc.add_QueryServicer_to_server(QueryService(), server)
-    server.add_insecure_port('[::]:50052')
+    server.add_insecure_port('[::]:50050')
     server.start()
-    print("Server started on port 50052")
+    print("Server started on port 50050", flush=True)
     server.wait_for_termination()
 
 if __name__ == '__main__':

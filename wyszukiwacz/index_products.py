@@ -13,7 +13,7 @@ from dotenv import load_dotenv
 DB_NAME = "postgres"
 DB_USER = "admin"
 DB_PASSWORD = 12345
-DB_HOST = "localhost"
+DB_HOST = "postgres-db"
 DB_PORT = "5432"
 TABLE_NAME = "products" # Make sure this matches your actual table name
 

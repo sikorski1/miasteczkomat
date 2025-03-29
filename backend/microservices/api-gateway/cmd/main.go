@@ -29,21 +29,28 @@ func main() {
 
 	cfg := config.Load()
 
-	grpcClient, err := grpc.NewClient(cfg.DataServiceAddress)
+	grpcDataClient, err := grpc.NewClient(cfg.DataServiceAddress)
 	if err != nil {
 		log.Fatalf("failed to initialize gRPC client: %v", err)
 	}
-	defer grpcClient.Close()
+	defer grpcDataClient.Close()
+
+	grpcQueryClient, err := grpc.NewClient(cfg.QueryServiceAddress)
+	if err != nil {
+		log.Fatalf("failed to initialize gRPC client: %v", err)
+	}
+	defer grpcQueryClient.Close()
 
 	minioClient := minio.NewMinioClient()
 	minioClient.EnsureBucketExists("images")
 
-	dataHandler := handlers.NewDataHandler(grpcClient, minioClient)
+	dataHandler := handlers.NewDataHandler(grpcDataClient, grpcQueryClient, minioClient)
 
 	r := chi.NewRouter()
 	r.Use(corsMiddleware)
 
 	r.Post("/data", dataHandler.UploadData)
+	r.Post("/query", dataHandler.GetProductsByQuery)
 
 	log.Printf("API Gateway started on port %s", cfg.HTTPPort)
 	if err = http.ListenAndServe(":"+cfg.HTTPPort, r); err != nil {
