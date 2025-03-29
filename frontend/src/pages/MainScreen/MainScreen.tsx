@@ -1,7 +1,8 @@
+import Header from "../../components/MainScreen/Header";
 export default function MainScreen() {
-    return (
-        <div>
-            <p>MIASTECZKOMAT</p>
-        </div>
-    )
+	return (
+		<main>
+			<Header></Header>
+		</main>
+	);
 }
