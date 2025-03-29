@@ -1,7 +1,9 @@
 export default function Header() {
-    return (
-      <header className="p-4 w-full bg-green">
-        <h1 className="lowercase font-bold text-3xl text-white">miasteczkomat</h1>
-      </header>
-    );
-  }
+
+	return (
+		<header className="w-full bg-green h-20 flex items-center justify-center">
+			<p className="lowercase text-white text-4xl">miasteczkomat</p>
+		</header>
+	);
+}
+
