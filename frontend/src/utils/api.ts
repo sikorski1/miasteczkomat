@@ -98,9 +98,8 @@ export const fetchAllProd = async (query: string): Promise<any> => {
 	const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 	try {
-		await delay(5000);
-
 		if (query) {
+			await delay(5000);
 			// const response = await axios.post(`${URL}/query`, query);
 			// return response.data;
 			return [data[0], data[2], data[4], data[5]];
