@@ -2,7 +2,7 @@
 // versions:
 //   protoc-gen-ts_proto  v2.7.0
 //   protoc               v5.29.3
-// source: data.proto
+// source: src/proto/data.proto
 
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
@@ -11,8 +11,8 @@ export const protobufPackage = "data";
 
 export interface User {
   dorm: string;
-  roomNumber: string;
-  name: string;
+  roomNumber: number;
+  userName: string;
   surname: string;
   phone: string;
   instagram: string;
@@ -30,9 +30,26 @@ export interface Product {
   personId: number;
 }
 
+export interface GetProduct {
+  name: string;
+  photo: string;
+  currency: string;
+  price: number;
+  category: string;
+  description: string;
+  actionType: string;
+  personId: number;
+  createdAt: string;
+}
+
 export interface FullPayload {
   user: User | undefined;
   product: Product | undefined;
+}
+
+export interface GetFullPayload {
+  user: User | undefined;
+  product: GetProduct | undefined;
 }
 
 export interface SaveResponse {
@@ -40,8 +57,15 @@ export interface SaveResponse {
   message: string;
 }
 
+export interface FullPayloadList {
+  payloads: GetFullPayload[];
+}
+
+export interface Empty {
+}
+
 function createBaseUser(): User {
-  return { dorm: "", roomNumber: "", name: "", surname: "", phone: "", instagram: "", facebook: "" };
+  return { dorm: "", roomNumber: 0, userName: "", surname: "", phone: "", instagram: "", facebook: "" };
 }
 
 export const User: MessageFns<User> = {
@@ -49,11 +73,11 @@ export const User: MessageFns<User> = {
     if (message.dorm !== "") {
       writer.uint32(10).string(message.dorm);
     }
-    if (message.roomNumber !== "") {
-      writer.uint32(18).string(message.roomNumber);
+    if (message.roomNumber !== 0) {
+      writer.uint32(16).int32(message.roomNumber);
     }
-    if (message.name !== "") {
-      writer.uint32(26).string(message.name);
+    if (message.userName !== "") {
+      writer.uint32(26).string(message.userName);
     }
     if (message.surname !== "") {
       writer.uint32(34).string(message.surname);
@@ -86,11 +110,11 @@ export const User: MessageFns<User> = {
           continue;
         }
         case 2: {
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.roomNumber = reader.string();
+          message.roomNumber = reader.int32();
           continue;
         }
         case 3: {
@@ -98,7 +122,7 @@ export const User: MessageFns<User> = {
             break;
           }
 
-          message.name = reader.string();
+          message.userName = reader.string();
           continue;
         }
         case 4: {
@@ -145,8 +169,8 @@ export const User: MessageFns<User> = {
   fromJSON(object: any): User {
     return {
       dorm: isSet(object.dorm) ? globalThis.String(object.dorm) : "",
-      roomNumber: isSet(object.roomNumber) ? globalThis.String(object.roomNumber) : "",
-      name: isSet(object.name) ? globalThis.String(object.name) : "",
+      roomNumber: isSet(object.roomNumber) ? globalThis.Number(object.roomNumber) : 0,
+      userName: isSet(object.userName) ? globalThis.String(object.userName) : "",
       surname: isSet(object.surname) ? globalThis.String(object.surname) : "",
       phone: isSet(object.phone) ? globalThis.String(object.phone) : "",
       instagram: isSet(object.instagram) ? globalThis.String(object.instagram) : "",
@@ -159,11 +183,11 @@ export const User: MessageFns<User> = {
     if (message.dorm !== "") {
       obj.dorm = message.dorm;
     }
-    if (message.roomNumber !== "") {
-      obj.roomNumber = message.roomNumber;
+    if (message.roomNumber !== 0) {
+      obj.roomNumber = Math.round(message.roomNumber);
     }
-    if (message.name !== "") {
-      obj.name = message.name;
+    if (message.userName !== "") {
+      obj.userName = message.userName;
     }
     if (message.surname !== "") {
       obj.surname = message.surname;
@@ -186,8 +210,8 @@ export const User: MessageFns<User> = {
   fromPartial<I extends Exact<DeepPartial<User>, I>>(object: I): User {
     const message = createBaseUser();
     message.dorm = object.dorm ?? "";
-    message.roomNumber = object.roomNumber ?? "";
-    message.name = object.name ?? "";
+    message.roomNumber = object.roomNumber ?? 0;
+    message.userName = object.userName ?? "";
     message.surname = object.surname ?? "";
     message.phone = object.phone ?? "";
     message.instagram = object.instagram ?? "";
@@ -368,6 +392,204 @@ export const Product: MessageFns<Product> = {
   },
 };
 
+function createBaseGetProduct(): GetProduct {
+  return {
+    name: "",
+    photo: "",
+    currency: "",
+    price: 0,
+    category: "",
+    description: "",
+    actionType: "",
+    personId: 0,
+    createdAt: "",
+  };
+}
+
+export const GetProduct: MessageFns<GetProduct> = {
+  encode(message: GetProduct, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.name !== "") {
+      writer.uint32(10).string(message.name);
+    }
+    if (message.photo !== "") {
+      writer.uint32(18).string(message.photo);
+    }
+    if (message.currency !== "") {
+      writer.uint32(26).string(message.currency);
+    }
+    if (message.price !== 0) {
+      writer.uint32(33).double(message.price);
+    }
+    if (message.category !== "") {
+      writer.uint32(42).string(message.category);
+    }
+    if (message.description !== "") {
+      writer.uint32(50).string(message.description);
+    }
+    if (message.actionType !== "") {
+      writer.uint32(58).string(message.actionType);
+    }
+    if (message.personId !== 0) {
+      writer.uint32(64).int32(message.personId);
+    }
+    if (message.createdAt !== "") {
+      writer.uint32(74).string(message.createdAt);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetProduct {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetProduct();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.name = reader.string();
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.photo = reader.string();
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.currency = reader.string();
+          continue;
+        }
+        case 4: {
+          if (tag !== 33) {
+            break;
+          }
+
+          message.price = reader.double();
+          continue;
+        }
+        case 5: {
+          if (tag !== 42) {
+            break;
+          }
+
+          message.category = reader.string();
+          continue;
+        }
+        case 6: {
+          if (tag !== 50) {
+            break;
+          }
+
+          message.description = reader.string();
+          continue;
+        }
+        case 7: {
+          if (tag !== 58) {
+            break;
+          }
+
+          message.actionType = reader.string();
+          continue;
+        }
+        case 8: {
+          if (tag !== 64) {
+            break;
+          }
+
+          message.personId = reader.int32();
+          continue;
+        }
+        case 9: {
+          if (tag !== 74) {
+            break;
+          }
+
+          message.createdAt = reader.string();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): GetProduct {
+    return {
+      name: isSet(object.name) ? globalThis.String(object.name) : "",
+      photo: isSet(object.photo) ? globalThis.String(object.photo) : "",
+      currency: isSet(object.currency) ? globalThis.String(object.currency) : "",
+      price: isSet(object.price) ? globalThis.Number(object.price) : 0,
+      category: isSet(object.category) ? globalThis.String(object.category) : "",
+      description: isSet(object.description) ? globalThis.String(object.description) : "",
+      actionType: isSet(object.actionType) ? globalThis.String(object.actionType) : "",
+      personId: isSet(object.personId) ? globalThis.Number(object.personId) : 0,
+      createdAt: isSet(object.createdAt) ? globalThis.String(object.createdAt) : "",
+    };
+  },
+
+  toJSON(message: GetProduct): unknown {
+    const obj: any = {};
+    if (message.name !== "") {
+      obj.name = message.name;
+    }
+    if (message.photo !== "") {
+      obj.photo = message.photo;
+    }
+    if (message.currency !== "") {
+      obj.currency = message.currency;
+    }
+    if (message.price !== 0) {
+      obj.price = message.price;
+    }
+    if (message.category !== "") {
+      obj.category = message.category;
+    }
+    if (message.description !== "") {
+      obj.description = message.description;
+    }
+    if (message.actionType !== "") {
+      obj.actionType = message.actionType;
+    }
+    if (message.personId !== 0) {
+      obj.personId = Math.round(message.personId);
+    }
+    if (message.createdAt !== "") {
+      obj.createdAt = message.createdAt;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<GetProduct>, I>>(base?: I): GetProduct {
+    return GetProduct.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<GetProduct>, I>>(object: I): GetProduct {
+    const message = createBaseGetProduct();
+    message.name = object.name ?? "";
+    message.photo = object.photo ?? "";
+    message.currency = object.currency ?? "";
+    message.price = object.price ?? 0;
+    message.category = object.category ?? "";
+    message.description = object.description ?? "";
+    message.actionType = object.actionType ?? "";
+    message.personId = object.personId ?? 0;
+    message.createdAt = object.createdAt ?? "";
+    return message;
+  },
+};
+
 function createBaseFullPayload(): FullPayload {
   return { user: undefined, product: undefined };
 }
@@ -441,6 +663,84 @@ export const FullPayload: MessageFns<FullPayload> = {
     message.user = (object.user !== undefined && object.user !== null) ? User.fromPartial(object.user) : undefined;
     message.product = (object.product !== undefined && object.product !== null)
       ? Product.fromPartial(object.product)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseGetFullPayload(): GetFullPayload {
+  return { user: undefined, product: undefined };
+}
+
+export const GetFullPayload: MessageFns<GetFullPayload> = {
+  encode(message: GetFullPayload, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.user !== undefined) {
+      User.encode(message.user, writer.uint32(10).fork()).join();
+    }
+    if (message.product !== undefined) {
+      GetProduct.encode(message.product, writer.uint32(18).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetFullPayload {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetFullPayload();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.user = User.decode(reader, reader.uint32());
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.product = GetProduct.decode(reader, reader.uint32());
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): GetFullPayload {
+    return {
+      user: isSet(object.user) ? User.fromJSON(object.user) : undefined,
+      product: isSet(object.product) ? GetProduct.fromJSON(object.product) : undefined,
+    };
+  },
+
+  toJSON(message: GetFullPayload): unknown {
+    const obj: any = {};
+    if (message.user !== undefined) {
+      obj.user = User.toJSON(message.user);
+    }
+    if (message.product !== undefined) {
+      obj.product = GetProduct.toJSON(message.product);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<GetFullPayload>, I>>(base?: I): GetFullPayload {
+    return GetFullPayload.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<GetFullPayload>, I>>(object: I): GetFullPayload {
+    const message = createBaseGetFullPayload();
+    message.user = (object.user !== undefined && object.user !== null) ? User.fromPartial(object.user) : undefined;
+    message.product = (object.product !== undefined && object.product !== null)
+      ? GetProduct.fromPartial(object.product)
       : undefined;
     return message;
   },
@@ -522,10 +822,116 @@ export const SaveResponse: MessageFns<SaveResponse> = {
   },
 };
 
+function createBaseFullPayloadList(): FullPayloadList {
+  return { payloads: [] };
+}
+
+export const FullPayloadList: MessageFns<FullPayloadList> = {
+  encode(message: FullPayloadList, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    for (const v of message.payloads) {
+      GetFullPayload.encode(v!, writer.uint32(10).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): FullPayloadList {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseFullPayloadList();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.payloads.push(GetFullPayload.decode(reader, reader.uint32()));
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): FullPayloadList {
+    return {
+      payloads: globalThis.Array.isArray(object?.payloads)
+        ? object.payloads.map((e: any) => GetFullPayload.fromJSON(e))
+        : [],
+    };
+  },
+
+  toJSON(message: FullPayloadList): unknown {
+    const obj: any = {};
+    if (message.payloads?.length) {
+      obj.payloads = message.payloads.map((e) => GetFullPayload.toJSON(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<FullPayloadList>, I>>(base?: I): FullPayloadList {
+    return FullPayloadList.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<FullPayloadList>, I>>(object: I): FullPayloadList {
+    const message = createBaseFullPayloadList();
+    message.payloads = object.payloads?.map((e) => GetFullPayload.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseEmpty(): Empty {
+  return {};
+}
+
+export const Empty: MessageFns<Empty> = {
+  encode(_: Empty, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): Empty {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseEmpty();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(_: any): Empty {
+    return {};
+  },
+
+  toJSON(_: Empty): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<Empty>, I>>(base?: I): Empty {
+    return Empty.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<Empty>, I>>(_: I): Empty {
+    const message = createBaseEmpty();
+    return message;
+  },
+};
+
 export interface Data {
   SaveUser(request: User): Promise<SaveResponse>;
   SaveProduct(request: Product): Promise<SaveResponse>;
   SaveFullPayload(request: FullPayload): Promise<SaveResponse>;
+  GetAllData(request: Empty): Promise<FullPayloadList>;
 }
 
 export const DataServiceName = "data.Data";
@@ -538,6 +944,7 @@ export class DataClientImpl implements Data {
     this.SaveUser = this.SaveUser.bind(this);
     this.SaveProduct = this.SaveProduct.bind(this);
     this.SaveFullPayload = this.SaveFullPayload.bind(this);
+    this.GetAllData = this.GetAllData.bind(this);
   }
   SaveUser(request: User): Promise<SaveResponse> {
     const data = User.encode(request).finish();
@@ -555,6 +962,12 @@ export class DataClientImpl implements Data {
     const data = FullPayload.encode(request).finish();
     const promise = this.rpc.request(this.service, "SaveFullPayload", data);
     return promise.then((data) => SaveResponse.decode(new BinaryReader(data)));
+  }
+
+  GetAllData(request: Empty): Promise<FullPayloadList> {
+    const data = Empty.encode(request).finish();
+    const promise = this.rpc.request(this.service, "GetAllData", data);
+    return promise.then((data) => FullPayloadList.decode(new BinaryReader(data)));
   }
 }
 

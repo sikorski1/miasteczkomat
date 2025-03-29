@@ -29,6 +29,7 @@ server.addService(dataPackage.Data.service, {
     SaveUser: userService.createUser,
     SaveProduct: productService.saveProduct,
     SaveFullPayload: fullService.saveFullPayload,
+    GetAllData: fullService.getFull
 });
 
 const port = '50051';

@@ -46,6 +46,8 @@ export const currencyEnum = pgEnum("currency_enum", ["PLN", "EUR", "Waluta Stude
 
 export const actionTypeEnum = pgEnum("action_type_enum", ["sprzedaż", "wymiana", "pożyczę"]);
 
+export const categoryEnum = pgEnum("category_enum", ["INNE","ELEKTRONIKA","UBRANIA", "ŻYWNOŚĆ", "KUCHNIA", "SPRZĄTANIE"]);
+
 export const products = pgTable("products", {
     id: serial("id").primaryKey(),
     name: text("name").notNull(),
@@ -53,15 +55,13 @@ export const products = pgTable("products", {
     price: integer("price").notNull(),
     currency: currencyEnum("currency").notNull(),
     description: text("description"),
-    category: text("category"),
+    category: categoryEnum("category").notNull(),
     person_id: integer("person_id").notNull().references(() => persons.id, { onDelete: "cascade" }),
     actionType: actionTypeEnum("action_type").notNull(),
     created_at: timestamp("created_at", { withTimezone: true }).default(sql`CURRENT_TIMESTAMP`)
 });
 
 
-
-// Relations
 export const dormitoriesRelations = relations(dormitories, ({ many }) => ({
     rooms: many(rooms)
 }));
