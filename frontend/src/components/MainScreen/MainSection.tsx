@@ -1,4 +1,7 @@
+import { useQuery } from "@tanstack/react-query";
 import { Product } from "../../types/MainScreenTypes";
+import { fetchAllProd } from "../../utils/api";
+import { LoadingSpinner } from "../Loading/LoadingSpiner";
 import ProductCard from "./ProductCard";
 const data: Product[] = [
 	{
@@ -39,11 +42,16 @@ const data: Product[] = [
 	},
 ];
 export default function MainSection() {
-	return (
+	const { data: prodData, isLoading, error } = useQuery({ queryKey: ["all products"], queryFn: fetchAllProd });
+    
+	console.log(prodData);
+	return true ? (
 		<div className="p-2 grid grid-cols-2 gap-4">
 			{data.map((item: Product, index: number) => (
 				<ProductCard key={item.name + item.createdAt} data={item} index={index} />
 			))}
 		</div>
+	) : (
+		<LoadingSpinner></LoadingSpinner>
 	);
 }

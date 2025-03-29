@@ -10,9 +10,6 @@ import Chat from "../../components/MainScreen/Chat";
 import ChatModal from "../../components/MainScreen/ChatModal";
 import MainSection from "../../components/MainScreen/MainSection";
 
-import MainContainer from "../../components/MainScreen/CategoriesModal";
-import AddProductModal from "../../components/MainScreen/AddProductModal";
-
 import UserModal from "../../components/MainScreen/UserModal";
 type Modals = {
 	categories: boolean;
@@ -21,7 +18,6 @@ type Modals = {
 	addProd: boolean;
 };
 
-
 export default function MainScreen() {
 	const [modalsOpen, setModalsOpen] = useState<Modals>({
 		categories: false,
@@ -29,6 +25,7 @@ export default function MainScreen() {
 		chat: false,
 		addProd: false,
 	});
+	const [filter, setFilter] = useState<string | null>(null);
 	const handleSetModalOpen = (modalName: string) => {
 		setModalsOpen(prev => ({
 			...prev,
@@ -36,16 +33,26 @@ export default function MainScreen() {
 		}));
 	};
 	const handleModalOnClose = (modalName: string) => {
+		console.log(123);
 		setModalsOpen(prev => ({
 			...prev,
 			[modalName]: false,
 		}));
 	};
+	const handleSetFilter = (filterType:string) => {
+		setFilter(filterType)
+	}
+	console.log(modalsOpen);
 	return (
 		<>
 			{modalsOpen["categories"] && (
-				<Dialog open={modalsOpen["categories"]} onClose={() => handleModalOnClose("categories")}>
-					<CategoriesModal></CategoriesModal>
+				<Dialog
+					open={modalsOpen["categories"]}
+					onClose={() => {
+					
+						handleModalOnClose("categories");
+					}}>
+					<CategoriesModal onClose={() => handleModalOnClose("chat")} handleSetFilter={handleSetFilter}></CategoriesModal>
 				</Dialog>
 			)}
 			{modalsOpen["user"] && (
