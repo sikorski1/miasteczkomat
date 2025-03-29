@@ -1,7 +1,7 @@
 export default function Header() {
     return (
-        <header className="w-full bg-red">
-            <h1 className="uppercase text">miasteczkomat</h1>
+        <header className="w-full bg-white">
+            <h1 className="uppercase">miasteczkomat</h1>
         </header>
     )
 }
