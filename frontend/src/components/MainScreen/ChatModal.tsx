@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { X } from "lucide-react";
 import { useState } from "react";
 import { getProdByQuery } from "../../utils/api";
-export default function AddProdModal({ onClose }) {
+export default function AddProdModal({ onClose }: any) {
 	const [query, setQuery] = useState("");
 	const { mutate } = useMutation({ mutationKey: ["query prod"], mutationFn: getProdByQuery });
 	const handleSearch = () => {
@@ -17,7 +17,7 @@ export default function AddProdModal({ onClose }) {
 				className="absolute right-6 top-6 p-2">
 				<X className="w-10 h-10" />
 			</button>
-			<p className="text-2xl font-semibold mb-2">Enter a prompt to search products</p>
+			<p className="text-2xl font-semibold mb-2">wprowadź zapytanie</p>
 			<input
 				type="text"
 				value={query}
@@ -30,7 +30,7 @@ export default function AddProdModal({ onClose }) {
 				<button
 					onClick={handleSearch}
 					className=" p-6 mt-6 bg-green text-white py-2 rounded-md hover:bg-green disabled:bg-gray-400 text-2xl">
-					submit
+					wyślij
 				</button>
 			</div>
 		</div>

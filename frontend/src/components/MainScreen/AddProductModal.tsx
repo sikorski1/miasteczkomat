@@ -4,7 +4,7 @@ import { Button, Input, Textarea } from "@headlessui/react";
 interface Product {
 	name: string;
 	photoUrl?: string;
-	price: number;
+	price: number | undefined;
 	currency: "PLN" | "EUR" | "Waluta Studencka";
 	description?: string;
 	category?: string;
@@ -16,7 +16,7 @@ export default function AddProductModal() {
 	const [product, setProduct] = useState<Product>({
 		name: "",
 		photoUrl: "",
-		price: 0,
+		price: undefined,
 		currency: "Waluta Studencka",
 		description: "",
 		category: "",
@@ -57,12 +57,13 @@ export default function AddProductModal() {
 					</label>
 					<input
 						id="file-upload"
+						name="photoUrl"
 						type="file"
 						className="hidden"
 						onChange={handleChange}
 					/>
-					<span className="text-gray-600">{product.photoUrl}</span>
 				</div>
+				<p className="text-1xl">{product.photoUrl}</p>
 				<Input
 					className={"w-full p-2 border rounded-md divide-solid border-[#dfdfdf]"}
 					name="price"
@@ -96,20 +97,12 @@ export default function AddProductModal() {
 					className="w-full p-2 border rounded-md divide-solid border-[#dfdfdf]"
 				>
 					<option value="ELEKTRONIKA">elektronika</option>
-					<option value="ŻYWNOŚĆ">żywność</option>
+					<option value="ZYWNOŚĆ">żywność</option>
 					<option value="UBRANIA">ubrania</option>
 					<option value="KUCHNIA">akcesoria kuchenne</option>
 					<option value="INNE">inne</option>
 					<option value="SPRZĄTANIE">środki czystości</option>
 				</select>
-				{/* <Input
-					name="personId"
-					type="number"
-					value={product.personId}
-					onChange={handleChange}
-					placeholder="Person ID"
-					required
-				/> */}
 				<select
 					name="actionType"
 					value={product.actionType}
