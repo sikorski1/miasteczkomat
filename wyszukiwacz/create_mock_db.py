@@ -15,7 +15,7 @@ CREATE_TABLE_SQL = f"""
 CREATE TABLE IF NOT EXISTS {TABLE_NAME} (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
-    photoUrl TEXT,
+    photourl TEXT,
     price DECIMAL(10, 2),
     currency VARCHAR(20),
     description TEXT,
@@ -50,7 +50,7 @@ def insert_products_from_csv(csv_file_path):
 
         # Prepare the insert query
         insert_query = f"""
-        INSERT INTO {TABLE_NAME} (name, photoUrl, price, currency, description, category, person_id, actionType)
+        INSERT INTO {TABLE_NAME} (name, photourl, price, currency, description, category, person_id, actionType)
         VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
         ON CONFLICT DO NOTHING;
         """
@@ -63,7 +63,7 @@ def insert_products_from_csv(csv_file_path):
                 try:
                     cursor.execute(insert_query, (
                         row['name'],
-                        row['photoUrl'],
+                        row['photourl'],
                         float(row['price']),
                         row['currency'],
                         row['description'],
