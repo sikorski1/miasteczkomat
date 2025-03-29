@@ -1,21 +1,44 @@
-import { db } from "./database/db";
-import express from "express";
-import dotenv from "dotenv";
-import cors from "cors";
+import * as grpc from '@grpc/grpc-js';
+import * as protoLoader from '@grpc/proto-loader';
+import { products } from './database/schema';
+import { db } from './database/db';
+import { ProductService } from './api/services/productService';
+import { UserService } from './api/services/userService'
+import { DataServiceName,  DataClientImpl, SaveResponse, User, Product, FullPayload } from './proto/data';
+import { BinaryWriter, BinaryReader } from '@bufbuild/protobuf/wire';
+import { FullService } from './api/services/fullService';
 
-dotenv.config();
-const app = express();
+const packageDefinition = protoLoader.loadSync('src/proto/data.proto', {
+    keepCase: true,
+    longs: String,
+    enums: String,
+    defaults: true,
+    oneofs: true,
+});
+const protoDescriptor = grpc.loadPackageDefinition(packageDefinition) as grpc.GrpcObject;
+const dataPackage = protoDescriptor.data as any;
 
-app.use(cors({
-    origin: `http://localhost:3000`,
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'input', 'X-Requested-With', 'Origin', 'Accept'],
-  }));
+const server = new grpc.Server();
 
-  app.use(express.json());
+const productService = new ProductService()
+const userService = new UserService()
+const fullService = new FullService
 
-app.use((req, res, next) => {
-  next();
+
+server.addService(dataPackage.Data.service, {
+    SaveUser: userService.createUser,
+    SaveProduct: productService.saveProduct,
+    SaveFullPayload: fullService.saveFullPayload,
+    GetAllData: fullService.getFull
 });
 
-app.listen(process.env.PORT || 3000);
+const port = '50051';
+server.bindAsync(`localhost:${port}`, grpc.ServerCredentials.createInsecure(), (error, port) => {
+  if (error) {
+    console.error('Error starting server:', error);
+    return;
+  }
+  console.log(`Server running at http://localhost:${port}`);
+  server.start();
+});
+  
