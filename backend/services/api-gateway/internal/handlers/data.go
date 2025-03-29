@@ -62,7 +62,7 @@ func (h *DataHandler) UploadData(w http.ResponseWriter, r *http.Request) {
 		User: &pbData.User{
 			Dorm:       payload.User.Dorm,
 			RoomNumber: payload.User.RoomNumber,
-			Name:       payload.User.Name,
+			UserName:   payload.User.Name,
 			Surname:    payload.User.Surname,
 			Phone:      payload.User.Phone,
 			Instagram:  payload.User.Instagram,
