@@ -2,7 +2,7 @@ import { BotMessageSquare } from "lucide-react";
 
 export default function Chat({ handleSetModalOpen }) {
 	return (
-		<div className="absolute absolute bottom-24 left-4">
+		<div className="absolute bottom-24 left-4">
 			<button
 				onClick={() => handleSetModalOpen("chat")}
 				className="size-16 bg-green rounded-full flex items-center justify-center">
