@@ -1,0 +1,67 @@
+version: "3.9"
+
+services:
+  minio:
+    image: minio/minio
+    container_name: minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ACCESS_KEY: admin
+      MINIO_SECRET_KEY: admin123
+    volumes:
+      - minio-data:/data
+    command: server /data --console-address ":9001"
+
+  api-gateway:
+    build: ./microservices/api-gateway
+    container_name: api-gateway
+    ports:
+      - "8080:8080"
+  db:
+    image: postgres:17
+    container_name: postgres-db
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: 12345
+      POSTGRES_DB: postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  dbserv:
+    build:
+      context: ./microservices/dbserv
+    container_name: dbserv
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgres://admin:12345@db:5432/postgres
+    ports:
+      - "3000:3000"
+      - "50051:50051"
+    command: sh -c "npm run migrate && npm run start"
+
+  wyszukiwacz:
+    build:
+      context: ../wyszukiwacz
+      dockerfile: Dockerfile
+    environment:
+      DB_NAME: postgres
+      DB_USER: admin
+      DB_PASSWORD: 12345
+      DB_HOST: postgres
+      DB_PORT: 5432
+    depends_on:
+      - db
+    ports:
+      - "50050:50050" # Expose the gRPC server port
+    volumes:
+      - ../wyszukiwacz:/app
+
+volumes:
+  pgdata:
+  minio-data:
