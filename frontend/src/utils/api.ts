@@ -1,15 +1,7 @@
 import axios from "axios";
 import { URL } from "./url";
 const data: Product[] = [
-	{
-		photoUrl: "https://media.stockwatch.pl/uploads/2023/10/marcin_skotniczny_ceo_software_mansion_720.jpg",
-		name: "Sweter z Marcinem",
-		description: "Super cieply sweter z wizerunkiem Marcina Skotniczego",
-		dormitory: "Filutek",
-		price: 100,
-		currency: "PLN",
-		createdAt: "2024-04-24",
-	},
+
 	{
 		photoUrl: "https://picsum.photos/200/300",
 		name: "Produkt 1",
@@ -93,6 +85,15 @@ const data: Product[] = [
 		currency: "PLN",
 		createdAt: "2024-04-24",
 	},
+	{
+		photoUrl: "https://media.stockwatch.pl/uploads/2023/10/marcin_skotniczny_ceo_software_mansion_720.jpg",
+		name: "Sweter z Marcinem",
+		description: "Super cieply sweter z wizerunkiem Marcina Skotniczego",
+		dormitory: "Filutek",
+		price: 100,
+		currency: "PLN",
+		createdAt: "2024-04-24",
+	},
 ];
 export const fetchAllProd = async (query: string): Promise<any> => {
 	const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
@@ -102,7 +103,7 @@ export const fetchAllProd = async (query: string): Promise<any> => {
 			await delay(5000);
 			// const response = await axios.post(`${URL}/query`, query);
 			// return response.data;
-			return [data[0], data[2], data[4], data[5]];
+			return [data[9], data[2], data[4], data[0]];
 		}
 		// const response = await axios.get(`${URL}/all-products`);
 		// return response.data;

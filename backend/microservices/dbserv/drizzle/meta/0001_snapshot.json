@@ -1,0 +1,319 @@
+{
+  "id": "c5cc7b45-1b91-4e1c-9ffb-a819363b4ea4",
+  "prevId": "c7365ab1-69e7-4293-be3f-dd4cb524ab06",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.dormitories": {
+      "name": "dormitories",
+      "schema": "",
+      "columns": {
+        "name": {
+          "name": "name",
+          "type": "dormitory_enum",
+          "typeSchema": "public",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "address": {
+          "name": "address",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.persons": {
+      "name": "persons",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "surname": {
+          "name": "surname",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "phone_number": {
+          "name": "phone_number",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "insta_url": {
+          "name": "insta_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "fb_url": {
+          "name": "fb_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "dormitory": {
+          "name": "dormitory",
+          "type": "dormitory_enum",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "number": {
+          "name": "number",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "persons_dormitory_number_rooms_dormitory_number_fk": {
+          "name": "persons_dormitory_number_rooms_dormitory_number_fk",
+          "tableFrom": "persons",
+          "tableTo": "rooms",
+          "columnsFrom": [
+            "dormitory",
+            "number"
+          ],
+          "columnsTo": [
+            "dormitory",
+            "number"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.products": {
+      "name": "products",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "photo_url": {
+          "name": "photo_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "price": {
+          "name": "price",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "currency": {
+          "name": "currency",
+          "type": "currency_enum",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "category": {
+          "name": "category",
+          "type": "category_enum",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "person_id": {
+          "name": "person_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "action_type": {
+          "name": "action_type",
+          "type": "action_type_enum",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "CURRENT_TIMESTAMP"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "products_person_id_persons_id_fk": {
+          "name": "products_person_id_persons_id_fk",
+          "tableFrom": "products",
+          "tableTo": "persons",
+          "columnsFrom": [
+            "person_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.rooms": {
+      "name": "rooms",
+      "schema": "",
+      "columns": {
+        "number": {
+          "name": "number",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "dormitory": {
+          "name": "dormitory",
+          "type": "dormitory_enum",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "rooms_dormitory_dormitories_name_fk": {
+          "name": "rooms_dormitory_dormitories_name_fk",
+          "tableFrom": "rooms",
+          "tableTo": "dormitories",
+          "columnsFrom": [
+            "dormitory"
+          ],
+          "columnsTo": [
+            "name"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "rooms_number_dormitory_pk": {
+          "name": "rooms_number_dormitory_pk",
+          "columns": [
+            "number",
+            "dormitory"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {
+    "public.action_type_enum": {
+      "name": "action_type_enum",
+      "schema": "public",
+      "values": [
+        "sprzedaż",
+        "wymiana",
+        "pożyczę"
+      ]
+    },
+    "public.category_enum": {
+      "name": "category_enum",
+      "schema": "public",
+      "values": [
+        "UBRANIA",
+        "INNE",
+        "ŻYWNOŚĆ",
+        "ŚRODKI CZYSTOŚCI",
+        "AKCESORIA KUCHENNE",
+        "RTV"
+      ]
+    },
+    "public.currency_enum": {
+      "name": "currency_enum",
+      "schema": "public",
+      "values": [
+        "PLN",
+        "EUR",
+        "Waluta Studencka"
+      ]
+    },
+    "public.dormitory_enum": {
+      "name": "dormitory_enum",
+      "schema": "public",
+      "values": [
+        "DS18 Odyseja",
+        "DS19 Apollo",
+        "DS15 Maraton",
+        "DS16 Itaka",
+        "DS17 Arkadia",
+        "DS4 Filutek",
+        "DS5 Strumyk",
+        "DS6 Bratek",
+        "DS7 Zaścianek",
+        "DS8 Stokrotka",
+        "DS9 Omega",
+        "DS10 Hajduczek",
+        "DS11 Bonus",
+        "DS12 Promyk",
+        "DS13 Straszny Dwór",
+        "DS1 Olimp",
+        "DS2 Babilon",
+        "DS3 Akropol",
+        "DS14 Kapitol",
+        "DS Alfa"
+      ]
+    }
+  },
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}
