@@ -4,7 +4,6 @@ import Header from "../../components/MainScreen/Header";
 import { useState } from "react";
 import AddButton from "../../components/AddButton";
 import Dialog from "../../components/Dialog/Dialog";
-import AddProdModal from "../../components/MainScreen/AddProdModal";
 import CategoriesModal from "../../components/MainScreen/CategoriesModal";
 import Chat from "../../components/MainScreen/Chat";
 import ChatModal from "../../components/MainScreen/ChatModal";
@@ -28,7 +27,7 @@ export default function MainScreen() {
 	});
 	const [filter, setFilter] = useState<string | null>(null);
 	const handleSetModalOpen = (modalName: string) => {
-		setModalsOpen(prev => ({
+		setModalsOpen((prev) => ({
 			...prev,
 			[modalName]: true,
 		}));
@@ -49,6 +48,7 @@ export default function MainScreen() {
 			{modalsOpen["categories"] && (
 				<Dialog
 					open={modalsOpen["categories"]}
+
 					onClose={() => {
 						handleModalOnClose("categories");
 					}}>
@@ -69,7 +69,7 @@ export default function MainScreen() {
 			)}
 			{modalsOpen["addProd"] && (
 				<Dialog open={modalsOpen["addProd"]} onClose={() => handleModalOnClose("addProd")}>
-					<AddProdModal></AddProdModal>
+					<AddProductModal></AddProductModal>
 				</Dialog>
 			)}
 			<main>
@@ -78,7 +78,7 @@ export default function MainScreen() {
 				<p className="mb-4 text-4xl text-center font-bold">{query ? query : "No prompts"}</p>
 				<MainSection />
 				<BottomBar handleSetModalOpen={handleSetModalOpen}></BottomBar>
-				<AddButton></AddButton>
+				<AddButton handleSetModalOpen={handleSetModalOpen}></AddButton>
 				<Chat handleSetModalOpen={handleSetModalOpen}></Chat>
 			</main>
 		</>

@@ -3,6 +3,8 @@ import { BrowserRouter } from "react-router-dom";
 import "./App.css";
 import { ProductProvider } from "./context/QueryContext";
 import Router from "./routing/Router";
+
+
 const queryClient = new QueryClient();
 function App() {
 	return (
